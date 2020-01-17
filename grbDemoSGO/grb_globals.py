@@ -10,16 +10,17 @@ ttlIcon = pygame.image.load("scrIcon.PNG")
 print("screen init")
 pygame.display.set_icon(ttlIcon)
 screen = pygame.display.set_mode((1280, 720))
-pygame.display.set_caption("Gamma Ray Battle Demo")
-
-
-pygame.mixer.init(frequency=48000 )
-pygame.init()
 try:
     pygame.scrap.init()
     print("pygame scrap init")
 except:
     print("pygame scrap not init")
+pygame.display.set_caption("Gamma Ray Battle Demo")
+
+
+pygame.mixer.init(frequency=48000 )
+pygame.init()
+
 
 
 

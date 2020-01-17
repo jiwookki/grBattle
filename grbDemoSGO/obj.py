@@ -347,17 +347,21 @@ class AnimText():
         self.y = y
         self.animSpd = animSpd
         self.characterCurrent = 0
+        self.frameCounter = 0
     def animate_blit(self):
-        if self.characterCurrent < len(self.text):
-            self.characterCurrent += self.animSpd
-            self.sprite = self.font.render(self.text[0:characterCurrent], True, self.color)
+        self.frameCounter += 1
+        if self.characterCurrent < len(self.text) and self.frameCounter == self.animSpd:
+            self.characterCurrent += 1
+            self.frameCounter = 0
+            self.sprite = self.font.render(self.text[0:self.characterCurrent], True, self.color)
             grb_globals.screen.blit(self.sprite, [self.x, self.y])
     def blit(self):
         self.sprite = font.render(self.text, True, self.color)
         super.blit()
     def gtLen(self):
         return len(self.text)
-
+    def resetAnim():
+        self.characterCurrent = 0
 
 def showInfoBoard(list_of_things_to_blit, x, y):
     global infoOn, medfont
