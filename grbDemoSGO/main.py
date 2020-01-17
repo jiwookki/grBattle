@@ -1,9 +1,8 @@
 
 print("Launching Gamma Ray Battle Demo")
 
-import pygame, grb_globals, platform, time
+import pygame, grb_globals, platform, time, season_demo
 from obj import *
-from season_demo import *
 print(str(grb_globals.gamemode))
 try:
     from arcade import *
@@ -149,17 +148,21 @@ def CopySiteLink():
             storySelector.centerval = 0
 
 def OpenEpisode():
-    global storySelector
-    if storySelector.get_selected == 0:
-        episode1()
-    elif storySelector.get_selected == 1:
-        episode2()
+    global storySelector, selected, gamemode
+    selected.play()
+    if storySelector.get_selected() == 0:
+        print("episode1")
+        grb_globals.gamemode = "cutscene1"
+    elif storySelector.get_selected() == 2:
+        print("episode 2")
     else:
-        pass
+        print("no episode")
+
+        
 
 
 def DetectKeyPressesStorySel():
-    global modeStorySlctEvent
+    global mmodeStorySlctEvent
     backMenu = KeyUser(pygame.K_b, modeStorySlctEvent, OpenMenu)
     siteOpen = KeyUser(pygame.K_c, modeStorySlctEvent, CopySiteLink)
     useEpisode = KeyUser(pygame.K_s, modeStorySlctEvent, OpenEpisode)
@@ -251,6 +254,8 @@ while True:
         storySelector.blit()
         modeStorySlctEvent.event_use()
         pygame.display.flip()
-
+    elif grb_globals.gamemode == "cutscene1":
+        print("confirmepi1")
+        season_demo.cutscene1()
 
 
