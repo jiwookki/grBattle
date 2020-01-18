@@ -42,7 +42,7 @@ def cutscene1():
 
 def episode1():
     modeEpi1Event = EventHandler()
-    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d], "delta1.GIF", modeEpi1Event, 4, 600, 100, 80, 80, "up", "blastershot.PNG", )
+    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d], "delta1.GIF", modeEpi1Event, 4, 600, 100, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32])
 
 
 
