@@ -28,12 +28,12 @@ def cutscene1():
             grb_globals.gameClock.tick_busy_loop(10)
             grb_globals.screen.fill((0, 0, 0))
             currentcutText.animate_blit()
-            modeCut1Event.event_use()
+            modeCut1Event.key_event_use()
             pygame.display.flip()
         for wait in range(0, 35):
             grb_globals.gameClock.tick_busy_loop(10)
             cutsceneWait += 1
-            modeCut1Event.event_use()
+            modeCut1Event.key_event_use()
             pygame.display.flip()
     grb_globals.gamemode = "story_selection_load"
 
@@ -43,6 +43,7 @@ def cutscene1():
 def episode1():
     modeEpi1Event = EventHandler()
     playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d], "delta1.GIF", modeEpi1Event, 4, 600, 100, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32])
+    
 
 
 

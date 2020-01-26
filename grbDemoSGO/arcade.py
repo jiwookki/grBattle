@@ -73,7 +73,7 @@ def selectionMode():
 
 
 
-    modeArselEvent.event_use()
+    modeArselEvent.key_event_use()
 
 
 

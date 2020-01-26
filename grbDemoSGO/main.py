@@ -174,7 +174,7 @@ while True:
         modeSet(2)
         grb_globals.gamemode = 2
         mode1Event = EventHandler()
-        mode1Event.event_use()    
+        mode1Event.key_event_use()    
     elif grb_globals.gamemode == 2:
         print("grb_globals.gamemode 2: titlescreen")
         screen.fill((0, 0, 0))
@@ -184,7 +184,7 @@ while True:
         prsToStart = Text("Press Any Key To Start", hugfont, [200, 255, 200], 425, 500)
         prsToQuit = Text("Press ESC to quit game", medfont, [255, 200, 100], 425, 550)
         cpyright = Text("Copyright © 2019-2020 Swordfish Software. All Rights Reserved.", smlfont, [255, 255, 255], 450, 700)
-        mode1Event.event_use()
+        mode1Event.key_event_use()
         pygame.display.flip()
     elif grb_globals.gamemode == 2.5:
         mainmusic.stop() 
@@ -220,7 +220,7 @@ while True:
         MakeTextOptions()
         modeSelectEvent = EventHandler()
         DetectKeyPressesMenu()
-        modeSelectEvent.event_use()
+        modeSelectEvent.key_event_use()
         pygame.display.flip()  
 
     elif grb_globals.gamemode == "settings":
@@ -229,7 +229,7 @@ while True:
         ShowSettings()
         modeSettingsEvent = EventHandler()
         DetectKeyPressesSettings()
-        modeSettingsEvent.event_use()
+        modeSettingsEvent.key_event_use()
         pygame.display.flip()
 
     elif grb_globals.gamemode == "settings_arcade":
@@ -252,7 +252,7 @@ while True:
         DrawStorySelectText()
         DetectKeyPressesStorySel()
         storySelector.blit()
-        modeStorySlctEvent.event_use()
+        modeStorySlctEvent.key_event_use()
         pygame.display.flip()
     elif grb_globals.gamemode == "cutscene1":
         print("confirmepi1")

@@ -6,10 +6,25 @@ import grb_globals
 
 print("objects and classes init")
 
+def getCustomEvents():
+    global listOfCustomEvents
+    listOfOut = []
+    for eve in grb_globals.listOfCustomEvents:
+        listOfOut.append(eve)
+    return listOfOut
+def getAllEvents():
+    global listOfCustomEvents
+    listOfEventsOut = []
+    for event in pygame.event.get():
+        listOfEventsOut.append(event)
+    for ev2 in grb_globals.listOfCustomEvents:
+        listOfEventsOut.append(ev2)
+    grb_globals.listOfCustomEvents = []
+    return listOfEventsOut
 
 def CalPixelSpeed(px):
     global gameClock
-    fps = grb_globals.gameClock.get_time()
+    fps = grb_globals.gameClock.get_rawtime()
     truespeed = px / fps * 100
     TTrueSpeed = truespeed - truespeed * 2
     return TTrueSpeed
@@ -120,7 +135,7 @@ class EventHandler():
         self.keyobjectslist = []
     def add_key_user(self, user):
         self.keyobjectslist.append(user)
-    def event_use(self):
+    def key_event_use(self):
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key  == pygame.K_ESCAPE:
@@ -130,7 +145,12 @@ class EventHandler():
             if event.type == pygame.QUIT:
                 print("pygame.quit")
                 sys.exit()
-
+class GameHandler(EventHandler):
+    def __init__(self):
+        super.__init__()
+    def all_event_use(self):
+        for event in getAllEvents():
+            pass
 
 
 class GameObject(Object):
@@ -279,6 +299,10 @@ class TempText(Text):
         grb_globals.screen.blit(self.sprite, [self.x, self.y])
 
 
+class EnemyShip(GameObject):
+    def __init__(self, sprite, hitX_Y_Sx_Sy, speed, projsprite, )
+        self.hitboxVars = hitX_Y_Sx_Sy
+        self.hitbox = pygame.Rect(hitX_Y_Sx_Sy)
 
 
 class BigText():
