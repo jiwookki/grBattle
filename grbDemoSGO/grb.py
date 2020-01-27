@@ -1,9 +1,13 @@
 import pygame
+listOfCustomEvents = []
 
-
-
-
-
+NOTYPE = "notype"
+PLAYERMOVEMENT = "enemymovement"
+DIRECTIONDOWN = "dir_down"
+DIRECTIONUP = "dir_up"
+DIRECTIONLEFT = "dir_left"
+DIRECTIONRIGHT = "dir_right"
+BULLETAPPROACHING = "proj_aprch" 
 
 
 ttlIcon = pygame.image.load("scrIcon.PNG")
@@ -21,6 +25,20 @@ pygame.display.set_caption("Gamma Ray Battle Demo")
 pygame.mixer.init(frequency=48000 )
 pygame.init()
 
+class CustomBlankEvent():
+    def __init__(self):
+        self.key = NOTYPE
+        self.type = NOTYPE
+        listOfCustomEvents.append(self)
+class CustomEnemyEvent(CustomEvent):
+    def __init__(self):
+        super.__init__()
+class CustomCanvasEvent()
+    def __init__(self, type_, keyOrDirection, position):
+        self.type = type_
+        self.key = keyOrDirection
+        self.direction = keyOrDirection
+        self.pos = position
 
 
 
@@ -49,7 +67,4 @@ gamemode = 1
 gameClock = pygame.time.Clock()
 gameClock.tick(1)
 
-listOfCustomEvents = []
-
-eventEnemyShoot = "eventShoot"
 

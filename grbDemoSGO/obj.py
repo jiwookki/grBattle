@@ -1,6 +1,6 @@
  
 import pygame, sys
-import grb_globals
+import grb
 
 # objects and classes, gamma ray battle code 3
 
@@ -9,7 +9,7 @@ print("objects and classes init")
 def getCustomEvents():
     global listOfCustomEvents
     listOfOut = []
-    for eve in grb_globals.listOfCustomEvents:
+    for eve in grb.listOfCustomEvents:
         listOfOut.append(eve)
     return listOfOut
 def getAllEvents():
@@ -17,37 +17,37 @@ def getAllEvents():
     listOfEventsOut = []
     for event in pygame.event.get():
         listOfEventsOut.append(event)
-    for ev2 in grb_globals.listOfCustomEvents:
+    for ev2 in grb.listOfCustomEvents:
         listOfEventsOut.append(ev2)
-    grb_globals.listOfCustomEvents = []
+    grb.listOfCustomEvents = []
     return listOfEventsOut
 
 def CalPixelSpeed(px):
     global gameClock
-    fps = grb_globals.gameClock.get_rawtime()
+    fps = grb.gameClock.get_rawtime()
     truespeed = px / fps * 100
     TTrueSpeed = truespeed - truespeed * 2
     return TTrueSpeed
 class Sound():
     def __init__(self, filename, channel):
         self.sound = pygame.mixer.Sound(filename)
-        if channel == grb_globals.sfxchannel:
+        if channel == grb.sfxchannel:
             self.volvar = "sfx"
-            self.sound.set_volume(grb_globals.sfxvolume)
-        elif channel == grb_globals.musicchannel:
+            self.sound.set_volume(grb.sfxvolume)
+        elif channel == grb.musicchannel:
             self.volvar = "music"
-            self.sound.set_volume(grb_globals.musicvolume)
+            self.sound.set_volume(grb.musicvolume)
         self.channel = channel
     def play(self):
         if self.volvar == "sfx":
-            self.channel.set_volume(grb_globals.sfxvolume)    
+            self.channel.set_volume(grb.sfxvolume)    
         else:
-            self.channel.set_volume(grb_globals.musicvolume)
+            self.channel.set_volume(grb.musicvolume)
         self.sound.play()
         if self.volvar == "sfx":
-            self.channel.set_volume(grb_globals.sfxvolume)
+            self.channel.set_volume(grb.sfxvolume)
         else:
-            self.channel.set_volume(grb_globals.musicvolume)
+            self.channel.set_volume(grb.musicvolume)
     def stop(self):
         self.sound.stop()
     def multiplay(self, parameter):
@@ -62,16 +62,16 @@ class Nothing:
 
 
 
-selected = Sound("select.wav", grb_globals.sfxchannel)
-selectxp = Sound("selectxp.ogg", grb_globals.sfxchannel)
-menumusic = Sound("menumusic.ogg", grb_globals.musicchannel)
+selected = Sound("select.wav", grb.sfxchannel)
+selectxp = Sound("selectxp.ogg", grb.sfxchannel)
+menumusic = Sound("menumusic.ogg", grb.musicchannel)
 
 class Object():
     def __init__(self, image, x, y):
         self.sprite = pygame.image.load(image)
         self.x = x
         self.y = y
-        grb_globals.screen.blit(self.sprite, [self.x, self.y])
+        grb.screen.blit(self.sprite, [self.x, self.y])
     def update(self, nex, ney):
         moveX = self.x - nex
         moveY = self.y - ney
@@ -81,7 +81,7 @@ class Object():
         newY = self.y + trueMoveY
         self.x = newX
         self.y = newY
-        grb_globals.screen.blit(self.sprite, [self.x, self.y])
+        grb.screen.blit(self.sprite, [self.x, self.y])
     def move(self, nx, ny):
         trueMoveX = CalPixelSpeed(nx)
         trueMoveY = CalPixelSpeed(ny)
@@ -89,19 +89,19 @@ class Object():
         newY = self.y + trueMoveY
         self.x = newX
         self.y = newY
-        grb_globals.screen.blit(self.sprite, [self.x, self.y])
+        grb.screen.blit(self.sprite, [self.x, self.y])
 
  
 class TempObject():
-    # Temporary object that doesn't grb_globals.screen blit when instance is called
+    # Temporary object that doesn't grb.screen blit when instance is called
     def __init__(self, image, x, y):
         self.sprite = pygame.image.load(image)
         self.x = x
         self.y = y
     def blit(self):
-        grb_globals.screen.blit(self.sprite, [self.x, self.y])
+        grb.screen.blit(self.sprite, [self.x, self.y])
     def update(self, x, y):
-        grb_globals.screen.blit(self.sprite, [self.x, self.y])
+        grb.screen.blit(self.sprite, [self.x, self.y])
 
 
 class Text():
@@ -110,13 +110,13 @@ class Text():
         self.y = y
         self.text = text
         self.sprite = font.render(self.text, True, color)
-        grb_globals.screen.blit(self.sprite, [self.x, self.y])
+        grb.screen.blit(self.sprite, [self.x, self.y])
     def update(self, text, font, color):
         self.text = text
         self.x = x
         self.y = y
         self.sprite = font.render(self.text, True, color)
-        grb_globals.screen.blit(self.sprite, [self.x, self.y])
+        grb.screen.blit(self.sprite, [self.x, self.y])
     def move(self, nex, ney):
         moveX = self.x - nex
         moveY = self.y - ney
@@ -126,9 +126,9 @@ class Text():
         newY = self.y + trueMoveY
         self.x = newX
         self.y = newY
-        grb_globals.screen.blit(self.sprite, [self.x, self.y])
+        grb.screen.blit(self.sprite, [self.x, self.y])
     def blit(self):
-        grb_globals.screen.blit(self.sprite, [self.x, self.y])
+        grb.screen.blit(self.sprite, [self.x, self.y])
 
 class EventHandler():
     def __init__(self):
@@ -148,9 +148,22 @@ class EventHandler():
 class GameHandler(EventHandler):
     def __init__(self):
         super.__init__()
+        self.CustomEventObjectslist = []
     def all_event_use(self):
         for event in getAllEvents():
-            pass
+            if event.type == pygame.KEYDOWN:
+                if event.key  == pygame.K_ESCAPE:
+                    sys.exit()
+                for objects in self.keyobjectslist:
+                    objects.use_event(event)
+            elif event.type == pygame.QUIT:
+                print("pygame.quit")
+                sys.exit()
+            for objects in self.CustomEventObjectslist
+        
+
+
+
 
 
 class GameObject(Object):
@@ -159,12 +172,12 @@ class GameObject(Object):
         self.y = y
         self.image = pygame.image.load(imgfilename)
         self.hitbox = pygame.Rect(self.x, self.y, sizex, sizey)
-        grb_globals.screen.blit(self.image, [self.x, self.y])
+        grb.screen.blit(self.image, [self.x, self.y])
     def move(self, x, y):
         self.x = x
         self.y = y
         self.hitbox.move_ip(self.x, self.y)
-        grb_globals.screen.blit(self.image, [self.x, self.y])
+        grb.screen.blit(self.image, [self.x, self.y])
     def test_collision(self, rectOrGameobj, object):
         if rectOrGameobj == "rect":
             if self.hitbox.colliderect(object) == True:
@@ -247,7 +260,7 @@ class Bullet(GameObject):
                 self.x += self.gun.speed
             else:
                 raise ValueError("Custom error: ship's direction (horizOrVerti) var set to wrong value")
-            grb_globals.screen.blit(self.image, [self.x, self.y])
+            grb.screen.blit(self.image, [self.x, self.y])
         else:
             self.shot = False
     def shot(self):
@@ -290,19 +303,21 @@ class Gun():
 
 class TempText(Text):
     def __init__(self, text, font, color, x, y):
-    # Temporary text that doesn't grb_globals.screen blit when instance is called
+    # Temporary text that doesn't grb.screen blit when instance is called
         self.x = x
         self.y = y
         self.text = text
         self.sprite = font.render(self.text, True, color)
     def blit(self):
-        grb_globals.screen.blit(self.sprite, [self.x, self.y])
+        grb.screen.blit(self.sprite, [self.x, self.y])
 
 
 class EnemyShip(GameObject):
-    def __init__(self, sprite, hitX_Y_Sx_Sy, speed, projsprite, )
+    def __init__(self, sprite, hitX_Y_Sx_Sy, speed, projsprite):
         self.hitboxVars = hitX_Y_Sx_Sy
         self.hitbox = pygame.Rect(hitX_Y_Sx_Sy)
+        self.bullSprite = pygame.image.load(projsprite)
+        #self.gun = Gun()
 
 
 class BigText():
@@ -378,7 +393,7 @@ class AnimText():
             self.characterCurrent += 1
             self.frameCounter = 0
             self.sprite = self.font.render(self.text[0:self.characterCurrent], True, self.color)
-            grb_globals.screen.blit(self.sprite, [self.x, self.y])
+            grb.screen.blit(self.sprite, [self.x, self.y])
     def blit(self):
         self.sprite = font.render(self.text, True, self.color)
         super.blit()
@@ -397,11 +412,11 @@ def showInfoBoard(list_of_things_to_blit, x, y):
     modeInfoEvent = EventHandler()
     while infoOn:
         keyBackUser = KeyUser(pygame.K_b, modeInfoEvent, closeBoard)
-        grb_globals.screen.blit(infoBoard, [x, y])
+        grb.screen.blit(infoBoard, [x, y])
         for obje in list_of_things_to_blit:
             obje.blit()
-        backText = Text("[B] Back", grb_globals.medfont, [75, 255, 255], x + 100, y + 350)
-        modeInfoEvent.event_use()
+        backText = Text("[B] Back", grb.medfont, [75, 255, 255], x + 100, y + 350)
+        modeInfoEvent.key_event_use()
         pygame.display.flip()
 
 def modeSet(varia):
@@ -415,8 +430,8 @@ def OpenMenu():
     pygame.mixer.stop()
     selected.play()
     menumusic.multiplay(-1)
-    grb_globals.gamemode = 3
-    print("grb_globals.gamemode is 3")
+    grb.gamemode = 3
+    print("grb.gamemode is 3")
 
 
 

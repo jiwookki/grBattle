@@ -1,9 +1,9 @@
 
 print("Launching Gamma Ray Battle Demo")
 
-import pygame, grb_globals, platform, time, season_demo
+import pygame, grb, platform, time, season_demo
 from obj import *
-print(str(grb_globals.gamemode))
+print(str(grb.gamemode))
 try:
     from arcade import *
     print("arcade pack init!")
@@ -19,9 +19,9 @@ def OpenMenuStart():
     global menumusic, startCounterVar
     selected.play()
     menumusic.multiplay(-1)
-    grb_globals.gamemode = 2.5
+    grb.gamemode = 2.5
     startCounterVar = 0
-    print("grb_globals.gamemode is 2.5")
+    print("grb.gamemode is 2.5")
 
 def OpenMenu(): 
     print("opened menusFJsdjk sfjk nlj fdj ffvkgj d f")
@@ -30,8 +30,8 @@ def OpenMenu():
     global menumusic                                                                                                  
     pygame.mixer.stop()
     pygame.event.clear()
-    grb_globals.gamemode = 3
-    print("grb_globals.gamemode is 3")
+    grb.gamemode = 3
+    print("grb.gamemode is 3")
     selected.play()
     menumusic.multiplay(-1)
 
@@ -58,7 +58,7 @@ def ShowSettings():
     #volUpShow = Text("Up Arrow Key: Volume Up", medfont, [150, 255, 150], 150, 140)
     #volDownShow = Text("Down Arrow Key: Volume Down", medfont, [255, 150, 150], 150, 240)
     backtomenu = Text("[B] Back To Menu", medfont, [255, 255, 180], 700, 50)
-    #volumeShow = Text("Volume: [" + str(int(grb_globals.sfxvolume * 10)) + "] 0 - 10", medfont, [200, 200, 255], 250, 190)
+    #volumeShow = Text("Volume: [" + str(int(grb.sfxvolume * 10)) + "] 0 - 10", medfont, [200, 200, 255], 250, 190)
     screensubttl = Text("Screen Controls", bigfont, [255, 255, 200], 700, 150)
     screenChangeInstructions = Text("[TAB] Toggle Screen Size", medfont, [200, 200, 200], 650, 190)
     screenChangeSubtitleIn = Text("Toggle Between 720p Windowed and 720p Fullscreen", smlfont, [200, 200, 200], 615, 210)
@@ -69,21 +69,21 @@ def SetToSettingMode():
     global selected
     menumusic.stop()
     selected.play()
-    grb_globals.gamemode = "settings"
+    grb.gamemode = "settings"
     print ("set to setting mode")
 
 def TurnUpVol():
     global sfxvolume
     global selected
-    if grb_globals.sfxvolume < 1:
-        grb_globals.sfxvolume += 0.1
+    if grb.sfxvolume < 1:
+        grb.sfxvolume += 0.1
         selected.play()
 
 def TurnDownVol():
     global sfxvolume
     global selected
-    if grb_globals.sfxvolume > 0:
-        grb_globals.sfxvolume -= 0.1
+    if grb.sfxvolume > 0:
+        grb.sfxvolume -= 0.1
         selected.play()
 
 def SetToTitleScreen():
@@ -91,14 +91,14 @@ def SetToTitleScreen():
     #global selected
     modeSet(1)
     menumusic.stop()
-    grb_globals.gamemode = 1
+    grb.gamemode = 1
     mainmusic.multiplay(-1)
     #selected.play()
 
 def ChangeToSetArcade():
     global gamemode
     global selected
-    grb_globals.gamemode = "settings_arcade"
+    grb.gamemode = "settings_arcade"
     menumusic.stop()
     selected.play()
     time.sleep(0.2)
@@ -108,7 +108,7 @@ storySlctMusic = Sound("storySlMu.ogg", musicchannel)
 def ChangeToSetStory():
     global gamemode
     global selected, storySlctMusic
-    grb_globals.gamemode = "story_selection_load"
+    grb.gamemode = "story_selection_load"
     menumusic.stop()
     selected.play()
 
@@ -132,7 +132,7 @@ def DrawStorySelectText():
     StartTextStory = Text("[S] Play Episode", bigfont, [200, 255, 200], 200, 640)
 
     pygame.time.wait(1)
-    #print(str(grb_globals.gamemode))
+    #print(str(grb.gamemode))
 def CopySiteLink():
 
     global storySelector, selectxp
@@ -152,7 +152,7 @@ def OpenEpisode():
     selected.play()
     if storySelector.get_selected() == 0:
         print("episode1")
-        grb_globals.gamemode = "cutscene1"
+        grb.gamemode = "cutscene1"
     elif storySelector.get_selected() == 2:
         print("episode 2")
     else:
@@ -168,15 +168,15 @@ def DetectKeyPressesStorySel():
     useEpisode = KeyUser(pygame.K_s, modeStorySlctEvent, OpenEpisode)
 
 while True:
-    grb_globals.gameClock.tick_busy_loop(15)
-    if grb_globals.gamemode == 1:
-        print ("grb_globals.gamemode 1")
+    grb.gameClock.tick_busy_loop(15)
+    if grb.gamemode == 1:
+        print ("grb.gamemode 1")
         modeSet(2)
-        grb_globals.gamemode = 2
+        grb.gamemode = 2
         mode1Event = EventHandler()
         mode1Event.key_event_use()    
-    elif grb_globals.gamemode == 2:
-        print("grb_globals.gamemode 2: titlescreen")
+    elif grb.gamemode == 2:
+        print("grb.gamemode 2: titlescreen")
         screen.fill((0, 0, 0))
         mode1Event = EventHandler()
         tooptions = KeyUser(None, mode1Event, OpenMenuStart)
@@ -186,7 +186,7 @@ while True:
         cpyright = Text("Copyright © 2019-2020 Swordfish Software. All Rights Reserved.", smlfont, [255, 255, 255], 450, 700)
         mode1Event.key_event_use()
         pygame.display.flip()
-    elif grb_globals.gamemode == 2.5:
+    elif grb.gamemode == 2.5:
         mainmusic.stop() 
 
         for startCounterVar in range(0, 40):
@@ -207,15 +207,15 @@ while True:
             for event in pygame.event.get():
                     pass
             pygame.display.flip()
-        grb_globals.gamemode = 3
+        grb.gamemode = 3
 
-    elif grb_globals.gamemode == "3change":
+    elif grb.gamemode == "3change":
         menumusic.multiplay(-1)
         selected.play()
-        grb_globals.gamemode = 3
+        grb.gamemode = 3
 
 
-    elif grb_globals.gamemode == 3:
+    elif grb.gamemode == 3:
         screen.fill((10, 10, 10))
         MakeTextOptions()
         modeSelectEvent = EventHandler()
@@ -223,8 +223,8 @@ while True:
         modeSelectEvent.key_event_use()
         pygame.display.flip()  
 
-    elif grb_globals.gamemode == "settings":
-        print(str(grb_globals.gamemode))
+    elif grb.gamemode == "settings":
+        print(str(grb.gamemode))
         screen.fill([80, 80, 80])
         ShowSettings()
         modeSettingsEvent = EventHandler()
@@ -232,13 +232,13 @@ while True:
         modeSettingsEvent.key_event_use()
         pygame.display.flip()
 
-    elif grb_globals.gamemode == "settings_arcade":
+    elif grb.gamemode == "settings_arcade":
         selectionMode()
         backMenuarc = KeyUser(pygame.K_b, modeArselEvent, OpenMenu)
         pygame.display.flip()
-    elif grb_globals.gamemode == "arcade":
+    elif grb.gamemode == "arcade":
         pass
-    elif grb_globals.gamemode == "story_selection_load":
+    elif grb.gamemode == "story_selection_load":
         modeStorySlctEvent = EventHandler()
         episodeList = [
         BigText(["A lead pilot finds himself stranded on a barren and desolate planet, ", "with little hope of escape or survival."], bigfont, [200, 255, 255], 175, 200, 30, True, hugfont, [255, 255, 255], heading=u"Episode 1: Gamma Mania"), 
@@ -246,15 +246,15 @@ while True:
         BigText(["This is the demo version of Gamma Ray Battle.", "so keep an eye out for the full version at ", "[ https://www.sites.google.com/view/swordfishgames/home ]!", "[C] Copy Link To Clipboard"], bigfont, [200, 255, 255], 175, 200, 30, True, hugfont, [255, 255, 255], heading=u"More episodes coming soon!")]
         storySelector = Selector(pygame.K_DOWN, pygame.K_UP, modeStorySlctEvent, episodeList)
         storySlctMusic.multiplay(-1)
-        grb_globals.gamemode = "story_selection"
-    elif grb_globals.gamemode == "story_selection":
+        grb.gamemode = "story_selection"
+    elif grb.gamemode == "story_selection":
         screen.fill((20, 20, 20))
         DrawStorySelectText()
         DetectKeyPressesStorySel()
         storySelector.blit()
         modeStorySlctEvent.key_event_use()
         pygame.display.flip()
-    elif grb_globals.gamemode == "cutscene1":
+    elif grb.gamemode == "cutscene1":
         print("confirmepi1")
         season_demo.cutscene1()
 

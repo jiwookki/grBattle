@@ -1,6 +1,6 @@
 
 from obj import *
-from grb_globals import *
+from grb import *
 
 modeArselEvent = EventHandler()
 listOfSprites = [TempObject("deltaShow.PNG", 6, 100), 
@@ -64,7 +64,7 @@ def drawSelectText():
 
 def selectionMode():
     global gamemode, modeArselEvent, arcadeSlctMusic
-    print(str(grb_globals.gamemode))
+    print(str(grb.gamemode))
     screen.fill((0, 0, 0))
     drawShipSelector()
     drawSelectText()
