@@ -1,0 +1,16 @@
+Cutscene text
+
+
+Cutscene text begins at the three opening brackets and ends at the three closing brackets. 
+Each line is it's own separate text and will be shown separately.
+(((
+In the star system of Sirius, a war rages, between 2 races, each one
+hoping to obtain superior control over the other.
+The war had flared over a dispute relating to the recent theft of water supply
+from the Dri Republic, and the Imperium was convicted of stealing the water supply.
+The Imperium denied any responsibillity of stealing the water supply, and began to open fire.
+The General sent 3 squads to lead the fleet, Alpha, Bravo and Delta.
+This is your 3rd week of being in Delta Squad, and you board your ship, the Delta 1
+and take off, heading for several key Dri Republic outposts.
+But as you reach the dry, desolate plains of Krenthos, you hear an explosion.
+The last thing you remember is your ship tilting toward a beige plain below...etxt
