@@ -9,6 +9,16 @@ def cutscene1():
     print("epepepepepepepepepepisode1")
     global gamemode
     modeCut1Event = EventHandler()
+    cut1File = open("cutscene1Text.txt", "r").read()
+    cutsceneRawText = cut1File[cut1File.find("(((") + 3:cut1File.find(")))")]
+    cutsceneTextList = []
+    cutsene1Text = []
+    for EachLine in cutsceneRawText.split("\n"):
+        cutsceneTextList.append(EachLine)
+    for eachVar in cutsceneTextList:
+        cutsene1Text.append(AnimText(eachVar, grb.bigfont, [255, 255, 255], 100, 250, 1))
+
+
     #cutsene1Text = [
     #AnimText("In the star system of Sirius, a war rages, between 2 races, each one", grb.bigfont, [255, 255, 255], 100, 250, 1),
     #AnimText("hoping to obtain superior control over the other. ", grb.bigfont, [255, 255, 255], 100, 300, 1),
@@ -25,7 +35,7 @@ def cutscene1():
 
         cutsceneWait = 0
         for current_length in range(0, currentcutText.gtLen()):
-            grb.gameClock.tick_busy_loop(12)
+            grb.gameClock.tick_busy_loop(20)
             grb.screen.fill((0, 0, 0))
             currentcutText.animate_blit()
             modeCut1Event.key_event_use()

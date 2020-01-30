@@ -30,15 +30,20 @@ class CustomBlankEvent():
         self.key = NOTYPE
         self.type = NOTYPE
         listOfCustomEvents.append(self)
-class CustomEnemyEvent(CustomEvent):
+class CustomEnemyEvent(CustomBlankEvent):
     def __init__(self):
         super.__init__()
-class CustomCanvasEvent()
+class CustomCanvasEvent():
     def __init__(self, type_, keyOrDirection, position):
         self.type = type_
         self.key = keyOrDirection
         self.direction = keyOrDirection
         self.pos = position
+class BulletIncoming(CustomBlankEvent):
+    def __init__(self, bullet_pos):
+        self.where = bullet_pos
+        self.type = BULLETAPPROACHING
+        self.key = NOTYPE
 
 
 

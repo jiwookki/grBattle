@@ -159,7 +159,10 @@ class GameHandler(EventHandler):
             elif event.type == pygame.QUIT:
                 print("pygame.quit")
                 sys.exit()
-            for objects in self.CustomEventObjectslist
+            for objects in self.CustomEventObjectslist:
+                if event.type == grb.BULLETAPPROACHING:
+                    objects.dodge_bullet(event.where)
+
         
 
 
