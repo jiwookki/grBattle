@@ -51,9 +51,11 @@ def cutscene1():
 
 
 def episode1():
-    modeEpi1Event = EventHandler()
+    modeEpi1Event = GameHandler()
     playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d], "delta1.GIF", modeEpi1Event, 4, 600, 100, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32])
-    
+    episode1On = True
+    while episode1On:
+        screen.fill((0, 0, 0))
 
 
 
