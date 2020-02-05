@@ -167,8 +167,6 @@ class GameHandler(EventHandler):
 
 
 
-
-
 class GameObject(Object):
     def __init__(self, x, y, sizex, sizey, imgfilename):
         self.x = x
@@ -193,6 +191,21 @@ class GameObject(Object):
             else:
                 return False
                 
+class KeyUser():
+    def __init__(self, key, eventhandler, function):
+        self.func = function
+        self.key = key
+        self.eventhandler = eventhandler
+        self.eventhandler.add_key_user(self)
+    def use_event(self, event):
+        if bool(self.key) == True:
+                if event.key == self.key:
+                    self.func()
+        else:
+                self.func()
+
+
+
 
 class Ship(GameObject):
     def __init__(self, keylist, filename, eventhandler, speedPerFrame, x, y, sizex, sizey, orient, bulletsprite, bulletrect, bulletspeed, bulletrate):
