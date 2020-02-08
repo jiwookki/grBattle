@@ -149,6 +149,8 @@ class GameHandler(EventHandler):
     def __init__(self):
         super.__init__()
         self.CustomEventObjectslist = []
+    def add_custom_user(self, user):
+        self.CustomEventObjectslist.append(user)
     def all_event_use(self):
         for event in getAllEvents():
             if event.type == pygame.KEYDOWN:
@@ -311,14 +313,6 @@ class TempText(Text):
         self.sprite = font.render(self.text, True, color)
     def blit(self):
         grb.screen.blit(self.sprite, [self.x, self.y])
-
-
-class EnemyShip(GameObject):
-    def __init__(self, sprite, hitX_Y_Sx_Sy, speed, projsprite):
-        self.hitboxVars = hitX_Y_Sx_Sy
-        self.hitbox = pygame.Rect(hitX_Y_Sx_Sy)
-        self.bullSprite = pygame.image.load(projsprite)
-        #self.gun = Gun()
 
 
 class BigText():

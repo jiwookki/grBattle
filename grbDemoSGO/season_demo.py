@@ -1,14 +1,32 @@
 import pygame, grb
 
 from obj import *
+class TinyFastEnemy():
+    def __init__(self, sprite, x, y, projsprite, projbox, sx, sy, gamehandler):
+        self.sprite = pygame.image.load(sprite)
+        self.x = x
+        self.y = y
+        self.sx = sx
+        self.sy = sy
+        self.hitbox = pygame.Rect[self.x, self.y, sx, sy]
+        gamehandler.add_custom_user(self)
+    def move_self(self, moved_x, moved_y):
+    def player_movement(self, old_pos, new_pos, player_movement):
 
 
 
-
+def delayCutsceneFrame():
+    global fastCutscene
+    fastCutscene = True
+    print("ARMAGEDDON")
 def cutscene1():
+    fastCutscene = False
     print("epepepepepepepepepepisode1")
     global gamemode
     modeCut1Event = EventHandler()
+    grb.screen.fill((20, 20, 20))
+    loadText = Text("Loading... Please wait.", grb.hugfont, [200, 255, 200], 200, 300)
+    modeCut1Event.key_event_use()
     cut1File = open("cutscene1Text.txt", "r").read()
     cutsceneRawText = cut1File[cut1File.find("(((") + 3:cut1File.find(")))")]
     cutsceneTextList = []
@@ -35,16 +53,23 @@ def cutscene1():
 
         cutsceneWait = 0
         for current_length in range(0, currentcutText.gtLen()):
-            grb.gameClock.tick_busy_loop(20)
+            delayAmountMeasurer = KeyUser(pygame.K_SPACE, modeCut1Event, delayCutsceneFrame)
             grb.screen.fill((0, 0, 0))
-            currentcutText.animate_blit()
+            if fastCutscene == False:
+                currentcutText.animate_blit()
+            else:
+                break
+                print("cheese")
             modeCut1Event.key_event_use()
             pygame.display.flip()
-        for wait in range(0, 35):
-            grb.gameClock.tick_busy_loop(10)
-            cutsceneWait += 1
-            modeCut1Event.key_event_use()
-            pygame.display.flip()
+        if fastCutscene == False:
+            for wait in range(0, 35):
+                grb.gameClock.tick_busy_loop(10)
+                cutsceneWait += 1
+                modeCut1Event.key_event_use()
+                pygame.display.flip()
+            else:
+                fastCutscene = False
     grb.gamemode = "story_selection_load"
 
 
@@ -56,6 +81,9 @@ def episode1():
     episode1On = True
     while episode1On:
         screen.fill((0, 0, 0))
+
+
+
 
 
 
