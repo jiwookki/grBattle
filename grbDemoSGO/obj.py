@@ -21,7 +21,6 @@ def getAllEvents():
         listOfEventsOut.append(ev2)
     grb.listOfCustomEvents = []
     return listOfEventsOut
-
 def CalPixelSpeed(px):
     global gameClock
     fps = grb.gameClock.get_rawtime()
@@ -162,8 +161,13 @@ class GameHandler(EventHandler):
                 print("pygame.quit")
                 sys.exit()
             for objects in self.CustomEventObjectslist:
-                if event.type == grb.BULLETAPPROACHING:
+                if event.type == grb.BulletIncoming:
                     objects.dodge_bullet(event.where)
+                elif event.type == grb.PlayerMovement:
+                    objects.player_movement()
+                else:
+                    objects.normal_movement()
+
 
         
 
