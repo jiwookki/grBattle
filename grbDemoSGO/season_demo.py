@@ -51,20 +51,6 @@ def cutscene1():
         cutsceneTextList.append(EachLine)
     for eachVar in cutsceneTextList:
         cutsene1Text.append(AnimText(eachVar, grb.bigfont, [255, 255, 255], 100, 250, 1))
-
-
-    #cutsene1Text = [
-    #AnimText("In the star system of Sirius, a war rages, between 2 races, each one", grb.bigfont, [255, 255, 255], 100, 250, 1),
-    #AnimText("hoping to obtain superior control over the other. ", grb.bigfont, [255, 255, 255], 100, 300, 1),
-    #AnimText("The war had flared over a dispute relating to the recent theft of water supply", grb.bigfont, [255, 255, 255], 100, 250, 1),
-    #AnimText("from the Dri Republic, and the Imperium was convicted of stealing the water supply.", grb.bigfont, [255, 255, 255], 100, 300, 1),
-    #AnimText("The Imperium denied any responsibillity of stealing the water supply, and began to open fire.", grb.bigfont, [255, 255, 255], 100, 250, 1),
-    #AnimText("The General sent 3 squads to lead the fleet, Alpha, Bravo and Delta.", grb.bigfont, [255, 255, 255], 100, 300, 1),
-    #AnimText("This is your 3rd week of being in Delta Squad, and you board your ship, the Delta 1", grb.bigfont, [255, 255, 255], 100, 250, 1),
-    #AnimText("and take off, heading for several key Dri Republic outposts.", grb.bigfont, [255, 255, 255], 100, 300, 1),
-    #AnimText("But as you reach the dry, desolate plains of Krenthos, you hear an explosion.", grb.bigfont, [255, 255, 255], 100, 250, 1),
-    #AnimText("The last thing you remember is your ship tilting toward a beige plain below...", grb.bigfont, [255, 255, 255], 100, 300, 1)
-    #]
     for currentcutText in range(0, len(cutsceneTextList), 2):
 
         cutsceneWait = 0
