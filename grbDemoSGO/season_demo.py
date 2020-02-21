@@ -15,15 +15,24 @@ class TinyFastEnemy():
         self.y = y
         self.sx = sx
         self.sy = sy
+        self.directionRefreshCounter = 0
+        self.currentDirection = random.randint(0, 3)
         self.hitbox = pygame.Rect[self.x, self.y, sx, sy]
         gamehandler.add_custom_user(self)
     def move_self(self, moved_x, moved_y):
-        oldx = self.
+        oldx = self.x
         oldy = self.y
         self.x = oldx + moved_x
         self.y = oldy + moved_y
         return [self.x, self.y]
     def normal_movement(self, player_coor):
+        if self.directionRefreshCounter == 15:
+            self.directionRefreshCounter = 0
+            self.currentDirection = random.randint(0, 3)
+        elif self.directionRefreshCounter < 15:
+            if self.currentDirection == 0:
+                self.x + 10
+                self.y - 
 
     def player_movement(self, old_pos, new_pos, player_movement):
 
@@ -78,7 +87,14 @@ def cutscene1():
 
 
 def episode1():
-    def drawScrollingBackground():
+    global scrollVar, subScrollVar
+    scrollVar = 0
+    subScrollVar = -720
+    def drawScrollingBackground(): 
+        global scrollVar, subScrollVar
+        backgroundSprite = TempObject("backdrop.jpg", 200, scrollVar)
+        foregroundSprite = TempObject("subbackdrop.jpg", 200, s)
+
         
     modeEpi1Event = GameHandler()
     playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d], "delta1.GIF", modeEpi1Event, 4, 600, 100, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32])
@@ -91,7 +107,11 @@ def episode1():
         modeEpi1Event.all_event_use()
         
         if frameType == 'normal':
-            
+
+        
+        if frameType == 'normal':
+            modeEpi1Event.all_event_use()
+
         elif frameType == 'spawn':
             pass
         pygame.display.flip()
