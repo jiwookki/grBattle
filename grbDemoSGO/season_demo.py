@@ -31,9 +31,17 @@ class TinyFastEnemy():
             self.currentDirection = random.randint(0, 3)
         elif self.directionRefreshCounter < 15:
             if self.currentDirection == 0:
-                self.x + 10
-                self.y - 
-
+                self.x += 10
+                self.y -= 10
+            elif self.currentDirection == 1:
+                self.x -= 10
+                self.y -= 10
+            elif self.currentDirection == 2:
+                self.x += 10
+                self.y += 8
+            elif self.currentDirection == 3:
+                self.x -= 10
+                self.y += 8 
     def player_movement(self, old_pos, new_pos, player_movement):
 
 
@@ -93,7 +101,13 @@ def episode1():
     def drawScrollingBackground(): 
         global scrollVar, subScrollVar
         backgroundSprite = TempObject("backdrop.jpg", 200, scrollVar)
-        foregroundSprite = TempObject("subbackdrop.jpg", 200, s)
+        foregroundSprite = TempObject("subbackdrop.jpg", 200, subScrollVar)
+        if subScrollVar <= -720:
+            subScrollVar = 720
+        elif scrollVar <= -720:
+            scrollVar = 720
+        scrollVar += 10
+        subScrollVar += 10
 
         
     modeEpi1Event = GameHandler()
@@ -104,7 +118,7 @@ def episode1():
     while episode1On:
 
         screen.fill((0, 0, 0))
-        modeEpi1Event.all_event_use()
+        drawScrollingBackground()
         
         if frameType == 'normal':
 
