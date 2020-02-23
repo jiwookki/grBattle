@@ -1,4 +1,4 @@
-
+ 
 print("Launching Gamma Ray Battle Demo")
 
 import pygame, grb, platform, time, season_demo
@@ -168,7 +168,6 @@ def DetectKeyPressesStorySel():
     useEpisode = KeyUser(pygame.K_s, modeStorySlctEvent, OpenEpisode)
 
 while True:
-    grb.gameClock.tick_busy_loop(15)
     if grb.gamemode == 1:
         print ("grb.gamemode 1")
         modeSet(2)
@@ -257,5 +256,5 @@ while True:
     elif grb.gamemode == "cutscene1":
         print("confirmepi1")
         season_demo.cutscene1()
-
+    grb.gameClock.tick_busy_loop(15)
 

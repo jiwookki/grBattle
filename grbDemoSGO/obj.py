@@ -16,10 +16,10 @@ def getAllEvents():
     global listOfCustomEvents
     listOfEventsOut = []
     for event in pygame.event.get():
-        listOfEventsOut.append(event)
+        listOfEventsOut.append(event)  
     for ev2 in grb.listOfCustomEvents:
         listOfEventsOut.append(ev2)
-    grb.listOfCustomEvents = []
+    grb.lisOfCustomEvents = []
     return listOfEventsOut
 def CalPixelSpeed(px):
     global gameClock
@@ -167,6 +167,7 @@ class GameHandler(EventHandler):
                     objects.player_movement()
                 else:
                     objects.normal_movement()
+                if event.type == 
 
 
         

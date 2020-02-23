@@ -17,7 +17,8 @@ class TinyFastEnemy():
         self.sy = sy
         self.directionRefreshCounter = 0
         self.currentDirection = random.randint(0, 3)
-        self.hitbox = pygame.Rect[self.x, self.y, sx, sy]
+        self.hitbox = pygame.Rect[self.x, self.y, self.sx, self.sy]
+        self.living = True
         gamehandler.add_custom_user(self)
     def move_self(self, moved_x, moved_y):
         oldx = self.x
@@ -31,18 +32,24 @@ class TinyFastEnemy():
             self.currentDirection = random.randint(0, 3)
         elif self.directionRefreshCounter < 15:
             if self.currentDirection == 0:
-                self.x += 10
-                self.y -= 10
+                self.x += CalPixelSpeed(10)
+                self.y -= CalPixelSpeed(10)
             elif self.currentDirection == 1:
-                self.x -= 10
-                self.y -= 10
+                self.x -= CalPixelSpeed(10)
+                self.y -= CalPixelSpeed(10)
             elif self.currentDirection == 2:
-                self.x += 10
-                self.y += 8
+                self.x += CalPixelSpeed(10)
+                self.y += CalPixelSpeed(8)
             elif self.currentDirection == 3:
-                self.x -= 10
-                self.y += 8 
+                self.x -= CalPixelSpeed(10)
+                self.y += CalPixelSpeed(8)
     def player_movement(self, old_pos, new_pos, player_movement):
+        self.normal_movement(new_pos)
+    def take_damage(self, knockbackVar, amountOfDamage):
+        self.hELTH -= amountOfDamage
+        self.y += CalPixelSpeed(4)
+    def get_destroyed(self, player_coor):
+        pass
 
 
 
@@ -95,7 +102,7 @@ def cutscene1():
 
 
 def episode1():
-    global scrollVar, subScrollVar
+    global scrollVar, subScrollVar, playerShip
     scrollVar = 0
     subScrollVar = -720
     def drawScrollingBackground(): 
@@ -106,8 +113,8 @@ def episode1():
             subScrollVar = 720
         elif scrollVar <= -720:
             scrollVar = 720
-        scrollVar += 10
-        subScrollVar += 10
+        scrollVar += CalPixelSpeed(10)
+        subScrollVar += CalPixelSpeed(10)
 
         
     modeEpi1Event = GameHandler()
@@ -116,12 +123,8 @@ def episode1():
     episodePhaseVar = 0
     frameType = 'normal'
     while episode1On:
-
         screen.fill((0, 0, 0))
         drawScrollingBackground()
-        
-        if frameType == 'normal':
-
         
         if frameType == 'normal':
             modeEpi1Event.all_event_use()
@@ -129,6 +132,7 @@ def episode1():
         elif frameType == 'spawn':
             pass
         pygame.display.flip()
+        grb.gameClock.tick_busy_loop(15)
 
 
 

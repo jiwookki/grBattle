@@ -8,6 +8,7 @@ DIRECTIONUP = "dir_up"
 DIRECTIONLEFT = "dir_left"
 DIRECTIONRIGHT = "dir_right"
 BULLETAPPROACHING = "proj_aprch" 
+BULLETIMPACT = "bullet_hit"
 
 
 ttlIcon = pygame.image.load("scrIcon.PNG")
@@ -49,7 +50,8 @@ class PlayerMovement(CustomBlankEvent):
         self.player_old_pos = player_old_pos
         self.player_new_pos = player_new_pos
         self.player_move_distance = (self.player_old_pos[0] - self.player_new_pos[0]) + (self.player_old_pos[1] - self.player_new_pos[1])
-
+class BulletHit():
+    def __init__(self, bulletRect):
 
 screenmodevar = "window"
 # global variables
