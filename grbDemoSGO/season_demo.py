@@ -60,75 +60,81 @@ def delayCutsceneFrame():
     fastCutscene = True
     print("ARMAGEDDON")
 def cutscene1():
+    global fastCutscene
     fastCutscene = False
     print("epepepepepepepepepepisode1")
     global gamemode
     modeCut1Event = EventHandler()
     grb.screen.fill((20, 20, 20))
     loadText = Text("Loading... Please wait.", grb.hugfont, [200, 255, 200], 200, 300)
+    loadTextTip = Text("Press the RETURN key to skip the cutscene", grb.bigfont, [255, 255, 255], 200, 450)
     modeCut1Event.key_event_use()
     cut1File = open("cutscene1Text.txt", "r").read()
     cutsceneRawText = cut1File[cut1File.find("(((") + 3:cut1File.find(")))")]
     cutsceneTextList = []
-    cutsene1Text = []
-    for EachLine in cutsceneRawText.split("\n"):
+    cutscene1Text = []
+    for EachLine in cutsceneRawText.split("\n"):  
         cutsceneTextList.append(EachLine)
     for eachVar in cutsceneTextList:
-        cutsene1Text.append(AnimText(eachVar, grb.bigfont, [255, 255, 255], 100, 250, 1))
-    for currentcutText in range(0, len(cutsceneTextList), 2):
+        if fastCutscene == False:
+            cutscene1Text.append(AnimText(eachVar, grb.bigfont, [255, 255, 255], 100, 250, 1))
+    for currentcutText in cutscene1Text:
+        if fastCutscene == False:
+            cutsceneWait = 0
+            for current_length in range(0, currentcutText.gtLen()):
+                delayAmountMeasurer = KeyUser(pygame.K_RETURN, modeCut1Event, delayCutsceneFrame)
+                grb.screen.fill((0, 0, 0))
+                if fastCutscene == False:
+                    currentcutText.animate_blit()
+                else:
+                    break
+                    print("cheese")
 
-        cutsceneWait = 0
-        for current_length in range(0, currentcutText.gtLen()):
-            delayAmountMeasurer = KeyUser(pygame.K_SPACE, modeCut1Event, delayCutsceneFrame)
-            grb.screen.fill((0, 0, 0))
-            if fastCutscene == False:
-                currentcutText.animate_blit()
-            else:
-                break
-                print("cheese")
             modeCut1Event.key_event_use()
             pygame.display.flip()
         if fastCutscene == False:
-            for wait in range(0, 35):
-                grb.gameClock.tick_busy_loop(10)
-                cutsceneWait += 1
-                modeCut1Event.key_event_use()
-                pygame.display.flip()
-            else:
-                fastCutscene = False
-    grb.gamemode = "story_selection_load"
+            if fastCutscene == False:
+                for wait in range(0, 35):
+                    grb.gameClock.tick_busy_loop(10)
+                    cutsceneWait += 1
+                    modeCut1Event.key_event_use()
+                    pygame.display.flip()   
+                    grb.gamemode = "episode1"
 
 
 
 
 def episode1():
     global scrollVar, subScrollVar, playerShip
-    scrollVar = 0
-    subScrollVar = -720
+    scrollVar = 720
+    subScrollVar = 0
     def drawScrollingBackground(): 
         global scrollVar, subScrollVar
         backgroundSprite = TempObject("backdrop.jpg", 200, scrollVar)
         foregroundSprite = TempObject("subbackdrop.jpg", 200, subScrollVar)
-        if subScrollVar <= -720:
-            subScrollVar = 720
-        elif scrollVar <= -720:
-            scrollVar = 720
-        scrollVar += CalPixelSpeed(10)
-        subScrollVar += CalPixelSpeed(10)
+        if subScrollVar >= 720:
+            subScrollVar = -720
+        elif scrollVar >= 720:
+            scrollVar = -720
+        backgroundSprite.blit()
+        foregroundSprite.blit()
+        movementVar = 10#CalPixelSpeed(-10)
+        scrollVar += movementVar
+        subScrollVar += movementVar
 
         
     modeEpi1Event = GameHandler()
-    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d], "delta1.GIF", modeEpi1Event, 4, 600, 100, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32])
+    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE], "delta1.GIF", modeEpi1Event, 4, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 15, 7, 500)
     episode1On = True
     episodePhaseVar = 0
     frameType = 'normal'
     while episode1On:
-        screen.fill((0, 0, 0))
+        grb.screen.fill((0, 0, 0))
         drawScrollingBackground()
         
         if frameType == 'normal':
             modeEpi1Event.all_event_use()
-
+            playerShip.blit()
         elif frameType == 'spawn':
             pass
         pygame.display.flip()

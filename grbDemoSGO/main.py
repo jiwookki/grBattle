@@ -1,7 +1,7 @@
  
 print("Launching Gamma Ray Battle Demo")
 
-import pygame, grb, platform, time, season_demo
+import pygame, grb, platform, time, season_demo, sys
 from obj import *
 print(str(grb.gamemode))
 try:
@@ -158,7 +158,7 @@ def OpenEpisode():
     else:
         print("no episode")
 
-        
+         
 
 
 def DetectKeyPressesStorySel():
@@ -198,6 +198,7 @@ while True:
             cpyright.move(cpyright.x + 5, cpyright.y - 30)
             print(startCounterVar)
             pygame.display.flip()
+            grb.gameClock.tick(30)
         clr = 80
         for startCo in range(0, 80):
             clr -= 1
@@ -256,5 +257,10 @@ while True:
     elif grb.gamemode == "cutscene1":
         print("confirmepi1")
         season_demo.cutscene1()
+    elif grb.gamemode == "episode1":
+        print("episode 1 mode")
+        season_demo.episode1()
+    else:
+        print("invalid gamemode")
+        sys.exit()
     grb.gameClock.tick_busy_loop(15)
-

@@ -52,7 +52,7 @@ class PlayerMovement(CustomBlankEvent):
         self.player_move_distance = (self.player_old_pos[0] - self.player_new_pos[0]) + (self.player_old_pos[1] - self.player_new_pos[1])
 class BulletHit():
     def __init__(self, bulletRect):
-
+        self.type = BULLETHIT
 screenmodevar = "window"
 # global variables
 def ChangeScreenMode():

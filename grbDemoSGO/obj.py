@@ -24,8 +24,8 @@ def getAllEvents():
 def CalPixelSpeed(px):
     global gameClock
     fps = grb.gameClock.get_rawtime()
-    truespeed = px / fps * 100
-    TTrueSpeed = truespeed - truespeed * 2
+    TTrueSpeed = px / fps * 100
+    #TTrueSpeed = truespeed - truespeed * 2
     return TTrueSpeed
 class Sound():
     def __init__(self, filename, channel):
@@ -140,34 +140,43 @@ class EventHandler():
                 if event.key  == pygame.K_ESCAPE:
                     sys.exit()
                 for objects in self.keyobjectslist:
-                    objects.use_event(event)
+                    objects.use_down_event(event)
             if event.type == pygame.QUIT:
                 print("pygame.quit")
                 sys.exit()
 class GameHandler(EventHandler):
     def __init__(self):
-        super.__init__()
+        super().__init__()
         self.CustomEventObjectslist = []
+        self.EveryObjectList = []
     def add_custom_user(self, user):
         self.CustomEventObjectslist.append(user)
     def all_event_use(self):
         for event in getAllEvents():
+            for objects in self.CustomEventObjectslist:
+                objects.every_frame_event()
             if event.type == pygame.KEYDOWN:
                 if event.key  == pygame.K_ESCAPE:
                     sys.exit()
                 for objects in self.keyobjectslist:
-                    objects.use_event(event)
+                    objects.use_up_event(event)
+            if event.type == pygame.KEYUP:
+                for objects in self.keyobjectslist:
+                    objects.use_down_event(event)
             elif event.type == pygame.QUIT:
                 print("pygame.quit")
                 sys.exit()
             for objects in self.CustomEventObjectslist:
-                if event.type == grb.BulletIncoming:
+                if event.type == grb.BULLETAPPROACHING:
                     objects.dodge_bullet(event.where)
-                elif event.type == grb.PlayerMovement:
+                elif event.type == grb.PLAYERMOVEMENT:
                     objects.player_movement()
                 else:
                     objects.normal_movement()
-                if event.type == 
+                if event.type == grb.BULLETIMPACT:
+                    objects.take_damage()
+                if objects.hELTH <= 0:
+                    objects.get_destroyed()
 
 
         
@@ -197,6 +206,8 @@ class GameObject(Object):
                 return True
             else:
                 return False
+    def blit(self):
+        grb.screen.blit(self.image, [self.x, self.y])
                 
 class KeyUser():
     def __init__(self, key, eventhandler, function):
@@ -204,7 +215,7 @@ class KeyUser():
         self.key = key
         self.eventhandler = eventhandler
         self.eventhandler.add_key_user(self)
-    def use_event(self, event):
+    def use_down_event(self, event):
         if bool(self.key) == True:
                 if event.key == self.key:
                     self.func()
@@ -214,13 +225,16 @@ class KeyUser():
 
 
 
+
 class Ship(GameObject):
-    def __init__(self, keylist, filename, eventhandler, speedPerFrame, x, y, sizex, sizey, orient, bulletsprite, bulletrect, bulletspeed, bulletrate):
+    def __init__(self, keylist, filename, eventhandler, speedPerFrame, x, y, sizex, sizey, orient, bulletsprite, bulletrect, bulletspeed, bulletrate, bulletrange):
         # the keylist should go up, down, left, right, same as most
         # early home computer's cursor keys.
         self.handler = eventhandler
+        self.handler.add_key_user(self)
         self.x = x
         self.y = y
+        self.image = pygame.image.load(filename)
         self.hitbox = pygame.Rect(x, y, sizex, sizey)
         self.keyup = keylist[0]
         self.keydown = keylist[1]
@@ -228,20 +242,31 @@ class Ship(GameObject):
         self.keyright = keylist[3]
         self.keyshoot = keylist[4]
         self.speed = speedPerFrame
-        self.gun = Gun(bulletsprite, bulletrect, orient, bulletpeed, bulletrate, self, [self.x, self.y], 425, 75)
+        self.gun = Gun(self.keyshoot, self.handler, bulletsprite, bulletrect, orient, bulletspeed, bulletrate, self, [self.x, self.y], bulletrange)
         self.orient = orient
-        self.speed = speedPerFrame
-    def use_event(self, event):
+        self.usualspeed = speedPerFrame
+        self.dx = 0
+        self.dy = 0
+    def use_down_event(self, event):
         if event.key == self.keyup:
-            self.y += self.speed
+            self.dy = self.usualspeed
         elif event.key == self.keydown:
-            self.y -= self.speed
+            self.dy = self.usualspeed - self.usualspeed * 2
         if event.key == self.keyleft:
-            self.x += self.speed
+            self.dx = self.usualspeed
         elif event.key == self.keyright:
-            self.x -= self.speed
+            self.dx = self.usualspeed - self.usualspeed * 2
+    def use_up_event(self, event):
+        if event.key == self.keyup or event.key == self.keydown:
+            self.dy = 0
+        if event.key == self.keyleft or event.key == self.keyright:
+            self.dx = 0
+    def every_frame_event(self):
+        self.x += self.dx
+        self.y += self.dy
     def shoot(self):
         self.gun.shoot()
+
 class Bullet(GameObject):
     def __init__(self, sprite, sizex, sizey, horizOrVerti, x, y, gunparent):
         self.sprite = pygame.image.load(sprite)
@@ -255,26 +280,28 @@ class Bullet(GameObject):
         self.shot = False
         #self.shot is the variable that tells if the bullet still exists in the map or not.
     def go_fire(self):
-        self.shot = True
         self.shootcounter += 1
         if self.shootcounter < self.range:
-            if self.direction == "up":
-                self.y += self.gun.speed
-            elif self.direction == "down":
-                self.y -= self.gun.speed
-            elif self.direction == "left":
-                self.x -= self.gun.speed
-            elif self.direction == "right":
-                self.x += self.gun.speed
-            else:
-                raise ValueError("Custom error: ship's direction (horizOrVerti) var set to wrong value")
+            if self.shot == False:
+                self.shot = True
+                if self.direction == "up":
+                    self.y += self.gun.speed
+                elif self.direction == "down":
+                    self.y -= self.gun.speed
+                elif self.direction == "left":
+                    self.x -= self.gun.speed
+                elif self.direction == "right":
+                    self.x += self.gun.speed
+                else:
+                    raise ValueError("Custom error: ship's direction (horizOrVerti) var set to wrong value")
             grb.screen.blit(self.image, [self.x, self.y])
         else:
-            self.shot = False
+            self.shot = "spent"
+            self.gunparent.bulletlist.pop(self)
     def shot(self):
         return self.shot
 class Gun():
-    def __init__(self, shootkey, eventhandler, bulletsprite, bulletX_Y_Sx_Sy, horizOrVerti, speed, firespeed, parent_ship, pos, rangegun, cooldown):
+    def __init__(self, shootkey, eventhandler, bulletsprite, bulletX_Y_Sx_Sy, horizOrVerti, speed, firespeed, parent_ship, pos, rangegun):
         eventhandler.add_key_user(self)
         self.shootkey = shootkey
         self.parentship = parent_ship
@@ -286,13 +313,13 @@ class Gun():
         self.direction = horizOrVerti
         self.range = rangegun
         self.speed = speed
-        self.cooltime = cooldown
+        self.cooltime = firespeed
         self.currentcooldown = 0
         self.coolbool = False
     def shoot(self):
         if self.coolbool == False:
             self.bulletlist.append(Bullet(self.bulletsprite, self.bulletRectPara[0], self.bulletRectPara[1], self.horizOrVerti, self.bulletRectPara[2], self.bulletRectPara[3], self))
-            newbullet.go_fire(self.range)
+            newbullet.go_fire()
             self.coolbool = True
         else:
             if self.currentcooldown < self.cooltime:
@@ -300,7 +327,7 @@ class Gun():
             else:
                 self.currentcooldown = 0
                 self.coolbool = False
-    def use_event(self, event):
+    def use_up_event(self, event):
         if event.key == self.shootkey:
             self.shoot()
         currentBulletEntry = 0
@@ -358,7 +385,7 @@ class Selector():
         self.list_of_items.append(objectNew)
     def blit(self):
         self.list_of_items[self.centerval].blit()
-    def use_event(self, event):
+    def use_down_event(self, event):
         print(self.centerval)
         if event.key == self.keyback:
             selected.play()
