@@ -301,7 +301,7 @@ class Bullet(GameObject):
     def shot(self):
         return self.shot
 class Gun():
-    def __init__(self, shootkey, eventhandler, bulletsprite, bulletX_Y_Sx_Sy, horizOrVerti, speed, firespeed, parent_ship, pos, rangegun):
+    def __init__(self, shootkey, eventhandler, bulletsprite, bulletX_Y_Sx_Sy, horizOrVerti, speed, firespeed, parent_ship, pos, rangegun, magSize, reloadTime):
         eventhandler.add_key_user(self)
         self.shootkey = shootkey
         self.parentship = parent_ship
@@ -316,6 +316,9 @@ class Gun():
         self.cooltime = firespeed
         self.currentcooldown = 0
         self.coolbool = False
+        self.magSize = magSize
+        self.magVar = self.magSize
+        self.reloading = False
     def shoot(self):
         if self.coolbool == False:
             self.bulletlist.append(Bullet(self.bulletsprite, self.bulletRectPara[0], self.bulletRectPara[1], self.horizOrVerti, self.bulletRectPara[2], self.bulletRectPara[3], self))
@@ -327,14 +330,12 @@ class Gun():
             else:
                 self.currentcooldown = 0
                 self.coolbool = False
-    def use_up_event(self, event):
-        if event.key == self.shootkey:
+    def use_down_event(self, event):
+        if event.key == self.shootkey and self.magVar > 0:
             self.shoot()
-        currentBulletEntry = 0
-        for shotBullet in self.bulletlist:
-            if shotBullet.shot == False:
-                del self.bulletlist[currentBulletEntry]
-                currentBulletEntry += 1
+            self.magVar -= 1
+        elif self.magVar <= 0:
+    def 
 
 class TempText(Text):
     def __init__(self, text, font, color, x, y):
