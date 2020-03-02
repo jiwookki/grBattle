@@ -319,6 +319,8 @@ class Gun():
         self.magSize = magSize
         self.magVar = self.magSize
         self.reloading = False
+        self.currentReloadTime = 0
+        self.reloadtime = reloadTime
     def shoot(self):
         if self.coolbool == False:
             self.bulletlist.append(Bullet(self.bulletsprite, self.bulletRectPara[0], self.bulletRectPara[1], self.horizOrVerti, self.bulletRectPara[2], self.bulletRectPara[3], self))
@@ -330,12 +332,25 @@ class Gun():
             else:
                 self.currentcooldown = 0
                 self.coolbool = False
+    def reload(self):
+        self.reloading = True
     def use_down_event(self, event):
-        if event.key == self.shootkey and self.magVar > 0:
+        if event.key == self.shootkey and self.magVar > 0 and self.currentcooldown == 0:
             self.shoot()
             self.magVar -= 1
+            self.coolbool = True
         elif self.magVar <= 0:
-    def 
+    def every_frame_event(self):
+        if self.coolbool == True:
+            if self.currentcooldown < self.cooltime:
+                self.currentcooldown += 1
+            elif self.currentcooldown >= self.cooltime:
+                self.coolbool = False
+        if self.reloading == True:
+            if self.currentReloadTime < self.reloadTime:
+                self.currentReloadTime += 1
+            elif self.currentReloadTime
+
 
 class TempText(Text):
     def __init__(self, text, font, color, x, y):
