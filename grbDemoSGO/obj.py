@@ -322,7 +322,7 @@ class Gun():
         self.currentReloadTime = 0
         self.reloadtime = reloadTime
     def shoot(self):
-        if self.coolbool == False:
+        if self.coolbool == False and self.reloading == False:
             self.bulletlist.append(Bullet(self.bulletsprite, self.bulletRectPara[0], self.bulletRectPara[1], self.horizOrVerti, self.bulletRectPara[2], self.bulletRectPara[3], self))
             newbullet.go_fire()
             self.coolbool = True
@@ -334,24 +334,45 @@ class Gun():
                 self.coolbool = False
     def reload(self):
         self.reloading = True
+
     def use_down_event(self, event):
         if event.key == self.shootkey and self.magVar > 0 and self.currentcooldown == 0:
             self.shoot()
             self.magVar -= 1
             self.coolbool = True
         elif self.magVar <= 0:
+            pass
     def every_frame_event(self):
+        for bullet in self.bulletlist:
+            bullet.go_fire()
         if self.coolbool == True:
+
             if self.currentcooldown < self.cooltime:
                 self.currentcooldown += 1
+
             elif self.currentcooldown >= self.cooltime:
                 self.coolbool = False
+
         if self.reloading == True:
+
             if self.currentReloadTime < self.reloadTime:
                 self.currentReloadTime += 1
-            elif self.currentReloadTime
 
+            elif self.currentReloadTime >= self.reloadTime:
 
+                self.currentReloadTime = 0
+                self.reloading = False
+                self.magVar = self.magSize
+        else:
+            if self.magVar <= 0:
+                self.reload()
+
+    def get_ammo_left():
+        return self.magVar
+
+    def get_cooldown():
+        return self.coolbool
+        
 class TempText(Text):
     def __init__(self, text, font, color, x, y):
     # Temporary text that doesn't grb.screen blit when instance is called
