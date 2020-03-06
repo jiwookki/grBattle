@@ -187,14 +187,14 @@ class GameObject(Object):
     def __init__(self, x, y, sizex, sizey, imgfilename):
         self.x = x
         self.y = y
-        self.image = pygame.image.load(imgfilename)
+        self.sprite = pygame.image.load(imgfilename)
         self.hitbox = pygame.Rect(self.x, self.y, sizex, sizey)
-        grb.screen.blit(self.image, [self.x, self.y])
+        grb.screen.blit(self.sprite, [self.x, self.y])
     def move(self, x, y):
         self.x = x
         self.y = y
         self.hitbox.move_ip(self.x, self.y)
-        grb.screen.blit(self.image, [self.x, self.y])
+        grb.screen.blit(self.sprite, [self.x, self.y])
     def test_collision(self, rectOrGameobj, object):
         if rectOrGameobj == "rect":
             if self.hitbox.colliderect(object) == True:
@@ -207,7 +207,7 @@ class GameObject(Object):
             else:
                 return False
     def blit(self):
-        grb.screen.blit(self.image, [self.x, self.y])
+        grb.screen.blit(self.sprite, [self.x, self.y])
                 
 class KeyUser():
     def __init__(self, key, eventhandler, function):
@@ -227,14 +227,14 @@ class KeyUser():
 
 
 class Ship(GameObject):
-    def __init__(self, keylist, filename, eventhandler, speedPerFrame, x, y, sizex, sizey, orient, bulletsprite, bulletrect, bulletspeed, bulletrate, bulletrange):
+    def __init__(self, keylist, filename, eventhandler, speedPerFrame, x, y, sizex, sizey, orient, bulletsprite, bulletrect, bulletspeed, bulletrate, bulletrange, ammocapacity, reloadtime, auto):
         # the keylist should go up, down, left, right, same as most
         # early home computer's cursor keys.
         self.handler = eventhandler
         self.handler.add_key_user(self)
         self.x = x
         self.y = y
-        self.image = pygame.image.load(filename)
+        self.sprite = pygame.image.load(filename)
         self.hitbox = pygame.Rect(x, y, sizex, sizey)
         self.keyup = keylist[0]
         self.keydown = keylist[1]
@@ -242,7 +242,7 @@ class Ship(GameObject):
         self.keyright = keylist[3]
         self.keyshoot = keylist[4]
         self.speed = speedPerFrame
-        self.gun = Gun(self.keyshoot, self.handler, bulletsprite, bulletrect, orient, bulletspeed, bulletrate, self, [self.x, self.y], bulletrange)
+        self.gun = Gun(self.keyshoot, self.handler, bulletsprite, bulletrect, orient, bulletspeed, bulletrate, self, [self.x, self.y], bulletrange, ammocapacity, reloadtime, auto)
         self.orient = orient
         self.usualspeed = speedPerFrame
         self.dx = 0
@@ -294,15 +294,16 @@ class Bullet(GameObject):
                     self.x += self.gun.speed
                 else:
                     raise ValueError("Custom error: ship's direction (horizOrVerti) var set to wrong value")
-            grb.screen.blit(self.image, [self.x, self.y])
+            grb.screen.blit(self.sprite, [self.x, self.y])
         else:
             self.shot = "spent"
             self.gunparent.bulletlist.pop(self)
     def shot(self):
         return self.shot
 class Gun():
-    def __init__(self, shootkey, eventhandler, bulletsprite, bulletX_Y_Sx_Sy, horizOrVerti, speed, firespeed, parent_ship, pos, rangegun, magSize, reloadTime):
+    def __init__(self, shootkey, eventhandler, bulletsprite, bulletX_Y_Sx_Sy, horizOrVerti, speed, firespeed, parent_ship, pos, rangegun, magSize, reloadTime, automatic):
         eventhandler.add_key_user(self)
+        self.auto = automatic
         self.shootkey = shootkey
         self.parentship = parent_ship
         self.bulletvelospeed = speed
@@ -323,12 +324,13 @@ class Gun():
         self.reloadtime = reloadTime
     def shoot(self):
         if self.coolbool == False and self.reloading == False:
-            self.bulletlist.append(Bullet(self.bulletsprite, self.bulletRectPara[0], self.bulletRectPara[1], self.horizOrVerti, self.bulletRectPara[2], self.bulletRectPara[3], self))
+            newbullet = Bullet(self.bulletsprite, self.bulletRectPara[0], self.bulletRectPara[1], self.direction, self.bulletRectPara[2], self.bulletRectPara[3], self)
+            self.bulletlist.append(newbullet)
             newbullet.go_fire()
             self.coolbool = True
         else:
             if self.currentcooldown < self.cooltime:
-                self.correntcooldown += 1
+                self.currentcooldown += 1
             else:
                 self.currentcooldown = 0
                 self.coolbool = False
@@ -367,11 +369,14 @@ class Gun():
             if self.magVar <= 0:
                 self.reload()
 
-    def get_ammo_left():
+    def get_ammo_left(self):
         return self.magVar
 
-    def get_cooldown():
+    def get_cooldown(self):
         return self.coolbool
+
+    def use_up_event(self, event):
+        print(event)
         
 class TempText(Text):
     def __init__(self, text, font, color, x, y):
