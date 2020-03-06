@@ -99,7 +99,7 @@ def cutscene1():
                     cutsceneWait += 1
                     modeCut1Event.key_event_use()
                     pygame.display.flip()   
-                    grb.gamemode = "episode1"
+                    episode1
 
 
 
