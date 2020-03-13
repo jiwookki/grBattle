@@ -4,7 +4,7 @@ import grb
 
 # objects and classes, gamma ray battle code 3
 
-print("objects and classes init")
+#print("objects and classes init")
 
 def getCustomEvents():
     global listOfCustomEvents
@@ -141,20 +141,36 @@ class EventHandler():
                     sys.exit()
                 for objects in self.keyobjectslist:
                     objects.use_down_event(event)
+            if event.type == pygame.KEYUP:
+                for objects in self.keyobjectslist:
+                    objects.use_up_event(event)
             if event.type == pygame.QUIT:
-                print("pygame.quit")
+                #print("pygame.quit")
                 sys.exit()
 class GameHandler(EventHandler):
     def __init__(self):
         super().__init__()
         self.CustomEventObjectslist = []
-        self.EveryObjectList = []
+
+    def key_event_use(self):
+        super().key_event_use()
+        self.playerShip.every_frame_event()
+
     def add_custom_user(self, user):
         self.CustomEventObjectslist.append(user)
-    def all_event_use(self):
+
+    def addShip(self, newship):
+        self.playerShip = newship
+
+    def get_custom_objects(self):
+        return self.CustomEventObjectslist
+
+    def custom_event_use(self):
+        self.playerShip.every_frame_event()
+        #print("eveyrframe")
+        for objects in self.CustomEventObjectslist:
+            objects.every_frame_event()
         for event in getAllEvents():
-            for objects in self.CustomEventObjectslist:
-                objects.every_frame_event()
             if event.type == pygame.KEYDOWN:
                 if event.key  == pygame.K_ESCAPE:
                     sys.exit()
@@ -164,7 +180,7 @@ class GameHandler(EventHandler):
                 for objects in self.keyobjectslist:
                     objects.use_down_event(event)
             elif event.type == pygame.QUIT:
-                print("pygame.quit")
+                #print("pygame.quit")
                 sys.exit()
             for objects in self.CustomEventObjectslist:
                 if event.type == grb.BULLETAPPROACHING:
@@ -177,6 +193,10 @@ class GameHandler(EventHandler):
                     objects.take_damage()
                 if objects.hELTH <= 0:
                     objects.get_destroyed()
+
+    def all_event_use(self):
+        self.key_event_use()
+        self.custom_event_use()
 
 
         
@@ -221,7 +241,8 @@ class KeyUser():
                     self.func()
         else:
                 self.func()
-
+    def use_up_event():
+        pass 
 
 
 
@@ -231,6 +252,7 @@ class Ship(GameObject):
         # the keylist should go up, down, left, right, same as most
         # early home computer's cursor keys.
         self.handler = eventhandler
+        self.handler.addShip(self)
         self.handler.add_key_user(self)
         self.x = x
         self.y = y
@@ -248,20 +270,25 @@ class Ship(GameObject):
         self.dx = 0
         self.dy = 0
     def use_down_event(self, event):
-        if event.key == self.keyup:
-            self.dy = self.usualspeed
-        elif event.key == self.keydown:
-            self.dy = self.usualspeed - self.usualspeed * 2
-        if event.key == self.keyleft:
-            self.dx = self.usualspeed
-        elif event.key == self.keyright:
-            self.dx = self.usualspeed - self.usualspeed * 2
+        if event.key == self.keydown:
+            #print("down downkey")
+            self.dy = CalPixelSpeed(self.usualspeed)
+        elif event.key == self.keyup:
+            #print("up downkey")
+            self.dy = CalPixelSpeed(self.usualspeed - self.usualspeed * 2)
+        if event.key == self.keyright:
+            #print("right downkey")
+            self.dx = CalPixelSpeed(self.usualspeed)
+        elif event.key == self.keyleft:
+            #print("left downkey")
+            self.dx = CalPixelSpeed(self.usualspeed - self.usualspeed * 2)
     def use_up_event(self, event):
         if event.key == self.keyup or event.key == self.keydown:
             self.dy = 0
         if event.key == self.keyleft or event.key == self.keyright:
             self.dx = 0
     def every_frame_event(self):
+        #print("player every frame")
         self.x += self.dx
         self.y += self.dy
     def shoot(self):
@@ -376,7 +403,7 @@ class Gun():
         return self.coolbool
 
     def use_up_event(self, event):
-        print(event)
+        pass
         
 class TempText(Text):
     def __init__(self, text, font, color, x, y):
@@ -392,16 +419,16 @@ class TempText(Text):
 class BigText():
     def __init__(self, textlist, font, color, x, y, linespace, temp, headFont, headColor, heading):
         self.textspritelist = []
-        print(heading)
+        #print(heading)
         self.headtext = heading
         if type(self.headtext) is str:
-            print("heading str")
+            #print("heading str")
             if temp == False:
                 self.heading = Text(heading, headFont, headColor, x, y + 15)
             elif temp == True:
                 self.heading = TempText(heading, headFont,headColor, x, y - 40)
         else:
-            print("heading not str")
+            #print("heading not str")
             self.heading = Nothing()
         crntTextLen = 0
         for textnew_ in textlist:
@@ -428,7 +455,7 @@ class Selector():
     def blit(self):
         self.list_of_items[self.centerval].blit()
     def use_down_event(self, event):
-        print(self.centerval)
+        #print(self.centerval)
         if event.key == self.keyback:
             selected.play()
             if self.centerval > 0: 
@@ -488,11 +515,10 @@ def showInfoBoard(list_of_things_to_blit, x, y):
         modeInfoEvent.key_event_use()
         pygame.display.flip()
 
-def modeSet(varia):
-    print("modeset" + str(varia))
+
 
 def OpenMenu():
-    print("opened menu")
+    #print("opened menu")
     global gamemode
     global selected
     global menumusic
@@ -500,7 +526,7 @@ def OpenMenu():
     selected.play()
     menumusic.multiplay(-1)
     grb.gamemode = 3
-    print("grb.gamemode is 3")
+    #print("grb.gamemode is 3")
 
 
 
@@ -523,5 +549,5 @@ def OpenMenu():
 
 
 
-print("objects")
+#print("objects")
 

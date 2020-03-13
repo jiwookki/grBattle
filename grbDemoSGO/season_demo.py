@@ -105,7 +105,7 @@ def cutscene1():
 
 
 def episode1():
-    global scrollVar, subScrollVar, playerShip
+    global scrollVar, subScrollVar, playerShip, gameClock
     scrollVar = 720
     subScrollVar = 0
     def drawScrollingBackground(): 
@@ -118,13 +118,13 @@ def episode1():
             scrollVar = -720
         backgroundSprite.blit()
         foregroundSprite.blit()
-        movementVar = 10#CalPixelSpeed(-10)
+        movementVar = CalPixelSpeed(30)
         scrollVar += movementVar
         subScrollVar += movementVar
 
         
     modeEpi1Event = GameHandler()
-    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE], "delta1.GIF", modeEpi1Event, 4, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 15, 7, 500, 12, 60, True)
+    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 15, 7, 500, 12, 60, True)
     episode1On = True
     episodePhaseVar = 0
     frameType = 'normal'
@@ -132,14 +132,16 @@ def episode1():
         grb.screen.fill((0, 0, 0))
         drawScrollingBackground()
         ammoDisp = Text("Ammo Left: " + str(playerShip.gun.get_ammo_left()), grb.medfont, [255, 255, 255], 25, 350)
-        
-        if frameType == 'normal':
+        if bool(modeEpi1Event.get_custom_objects()) == False:
+            modeEpi1Event.key_event_use()
+        else:
             modeEpi1Event.all_event_use()
-            playerShip.blit()
-        elif frameType == 'spawn':
-            pass
+        #if frameType == 'normal':
+        playerShip.blit()
+        #elif frameType == 'spawn':
+            #pass
         pygame.display.flip()
-        grb.gameClock.tick_busy_loop(30)
+        grb.gameClock.tick(15)
 
 
 

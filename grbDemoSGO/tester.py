@@ -4,4 +4,7 @@ from season_demo import *
 from arcade import *
 
 command = input("enter command here: ")
-exec(command)
+if command == "cu":
+    exec("cutscene1()")
+else:
+    exec(command)

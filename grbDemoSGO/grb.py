@@ -76,6 +76,6 @@ musicchannel = pygame.mixer.Channel(0)
 sfxchannel = pygame.mixer.Channel(1)
 gamemode = 1
 gameClock = pygame.time.Clock()
-gameClock.tick(1)
+gameClock.tick()
 
 
