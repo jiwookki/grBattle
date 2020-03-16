@@ -73,18 +73,22 @@ def cutscene1():
     cutsceneRawText = cut1File[cut1File.find("(((") + 3:cut1File.find(")))")]
     cutsceneTextList = []
     cutscene1Text = []
-    for EachLine in cutsceneRawText.split("\n"):  
+    for EachLine in cutsceneRawText.split("\n"):
+        print("append cutscene text")  
         cutsceneTextList.append(EachLine)
     for eachVar in cutsceneTextList:
         if fastCutscene == False:
+            print("creating sprites")
             cutscene1Text.append(AnimText(eachVar, grb.bigfont, [255, 255, 255], 100, 250, 1))
     for currentcutText in cutscene1Text:
+        print(fastCutscene)
         if fastCutscene == False:
             cutsceneWait = 0
             for current_length in range(0, currentcutText.gtLen()):
                 delayAmountMeasurer = KeyUser(pygame.K_RETURN, modeCut1Event, delayCutsceneFrame)
                 grb.screen.fill((0, 0, 0))
                 if fastCutscene == False:
+                    print("animating")
                     currentcutText.animate_blit()
                 else:
                     break
