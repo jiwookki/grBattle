@@ -21,12 +21,18 @@ def getAllEvents():
         listOfEventsOut.append(ev2)
     grb.lisOfCustomEvents = []
     return listOfEventsOut
+
+
+
 def CalPixelSpeed(px):
     global gameClock
     fps = grb.gameClock.get_rawtime()
     TTrueSpeed = px / fps * 100
     #TTrueSpeed = truespeed - truespeed * 2
     return TTrueSpeed
+
+
+
 class Sound():
     def __init__(self, filename, channel):
         self.sound = pygame.mixer.Sound(filename)
@@ -88,6 +94,10 @@ class Object():
         newY = self.y + trueMoveY
         self.x = newX
         self.y = newY
+        grb.screen.blit(self.sprite, [self.x, self.y])
+    def change_pos(self, x, y):
+        self.x = x
+        self.y = y
         grb.screen.blit(self.sprite, [self.x, self.y])
 
  
@@ -291,6 +301,7 @@ class Ship(GameObject):
         #print("player every frame")
         self.x += self.dx
         self.y += self.dy
+        self.gun.every_frame_event()
     def shoot(self):
         self.gun.shoot()
 
@@ -307,24 +318,28 @@ class Bullet(GameObject):
         self.shot = False
         #self.shot is the variable that tells if the bullet still exists in the map or not.
     def go_fire(self):
+        print(self.shootcounter)
         self.shootcounter += 1
-        if self.shootcounter < self.range:
+        print("gofire")
+        if self.shootcounter <= self.range:
             if self.shot == False:
                 self.shot = True
-                if self.direction == "up":
-                    self.y += self.gun.speed
-                elif self.direction == "down":
-                    self.y -= self.gun.speed
-                elif self.direction == "left":
-                    self.x -= self.gun.speed
-                elif self.direction == "right":
-                    self.x += self.gun.speed
-                else:
-                    raise ValueError("Custom error: ship's direction (horizOrVerti) var set to wrong value")
+            if self.direction == "up":
+                self.y -= self.gun.speed
+            elif self.direction == "down":
+                self.y += self.gun.speed
+            elif self.direction == "left":
+                self.x -= self.gun.speed
+            elif self.direction == "right":
+                self.x += self.gun.speed
+            else:
+                raise ValueError("Custom error: ship's direction (horizOrVerti) var set to wrong value")
+            print("shotmov")
             grb.screen.blit(self.sprite, [self.x, self.y])
         else:
             self.shot = "spent"
-            self.gunparent.bulletlist.pop(self)
+            self.gun.bulletlist.remove(self)
+            print("spent")
     def shot(self):
         return self.shot
 class Gun():
@@ -352,6 +367,7 @@ class Gun():
     def shoot(self):
         if self.coolbool == False and self.reloading == False:
             newbullet = Bullet(self.bulletsprite, self.bulletRectPara[0], self.bulletRectPara[1], self.direction, self.bulletRectPara[2], self.bulletRectPara[3], self)
+            newbullet.change_pos(self.parentship.x, self.parentship.y)
             self.bulletlist.append(newbullet)
             newbullet.go_fire()
             self.coolbool = True
@@ -365,12 +381,14 @@ class Gun():
         self.reloading = True
 
     def use_down_event(self, event):
-        if event.key == self.shootkey and self.magVar > 0 and self.currentcooldown == 0:
+        if event.key == self.shootkey and self.magVar > 0 and self.coolbool == False:
             self.shoot()
             self.magVar -= 1
             self.coolbool = True
         elif self.magVar <= 0:
-            pass
+            print("empty clip")
+        elif self.coolbool == True:
+            print("still cooling")
     def every_frame_event(self):
         for bullet in self.bulletlist:
             bullet.go_fire()
@@ -381,13 +399,14 @@ class Gun():
 
             elif self.currentcooldown >= self.cooltime:
                 self.coolbool = False
+                self.currentcooldown = 0
 
         if self.reloading == True:
 
-            if self.currentReloadTime < self.reloadTime:
+            if self.currentReloadTime < self.reloadtime:
                 self.currentReloadTime += 1
 
-            elif self.currentReloadTime >= self.reloadTime:
+            elif self.currentReloadTime >= self.reloadtime:
 
                 self.currentReloadTime = 0
                 self.reloading = False

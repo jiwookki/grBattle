@@ -262,4 +262,4 @@ while True:
     else:
         print("invalid gamemode")
         sys.exit()
-    grb.gameClock.tick_busy_loop(15)
+    grb.gameClock.tick(30)
