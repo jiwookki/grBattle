@@ -267,6 +267,8 @@ class Ship(GameObject):
         self.x = x
         self.y = y
         self.sprite = pygame.image.load(filename)
+        self.size_x = sizex
+        self.size_y = sizey
         self.hitbox = pygame.Rect(x, y, sizex, sizey)
         self.keyup = keylist[0]
         self.keydown = keylist[1]
@@ -325,13 +327,13 @@ class Bullet(GameObject):
             if self.shot == False:
                 self.shot = True
             if self.direction == "up":
-                self.y -= self.gun.speed
+                self.y -= CalPixelSpeed(self.gun.speed)
             elif self.direction == "down":
-                self.y += self.gun.speed
+                self.y += CalPixelSpeed(self.gun.speed)
             elif self.direction == "left":
-                self.x -= self.gun.speed
+                self.x -= CalPixelSpeed(self.gun.speed)
             elif self.direction == "right":
-                self.x += self.gun.speed
+                self.x += CalPixelSpeed(self.gun.speed)
             else:
                 raise ValueError("Custom error: ship's direction (horizOrVerti) var set to wrong value")
             print("shotmov")
@@ -357,6 +359,7 @@ class Gun():
         self.range = rangegun
         self.speed = speed
         self.cooltime = firespeed
+        self.autoshooting = None
         self.currentcooldown = 0
         self.coolbool = False
         self.magSize = magSize
@@ -364,32 +367,38 @@ class Gun():
         self.reloading = False
         self.currentReloadTime = 0
         self.reloadtime = reloadTime
+        print("autofalse init")
     def shoot(self):
         if self.coolbool == False and self.reloading == False:
             newbullet = Bullet(self.bulletsprite, self.bulletRectPara[0], self.bulletRectPara[1], self.direction, self.bulletRectPara[2], self.bulletRectPara[3], self)
             newbullet.change_pos(self.parentship.x, self.parentship.y)
+            self.magVar -= 1
             self.bulletlist.append(newbullet)
             newbullet.go_fire()
             self.coolbool = True
-        else:
-            if self.currentcooldown < self.cooltime:
-                self.currentcooldown += 1
-            else:
-                self.currentcooldown = 0
-                self.coolbool = False
+
     def reload(self):
         self.reloading = True
 
     def use_down_event(self, event):
-        if event.key == self.shootkey and self.magVar > 0 and self.coolbool == False:
-            self.shoot()
-            self.magVar -= 1
-            self.coolbool = True
-        elif self.magVar <= 0:
-            print("empty clip")
-        elif self.coolbool == True:
-            print("still cooling")
+        if self.auto == True:
+            print("auto")
+            if event.key == self.shootkey:
+                print("autoed")
+                self.autoshooting = True
+                print(str(self.autoshooting) + "beg")
+
+        else:
+            print("manual")
+            if event.key == self.shootkey and self.magVar > 0 and self.coolbool == False:
+                self.shoot()
+                self.coolbool = True
+            elif self.magVar <= 0:
+                print("empty clip")
+            elif self.coolbool == True:
+                print("still cooling")
     def every_frame_event(self):
+        print(str(self.autoshooting))
         for bullet in self.bulletlist:
             bullet.go_fire()
         if self.coolbool == True:
@@ -415,6 +424,12 @@ class Gun():
             if self.magVar <= 0:
                 self.reload()
 
+        if self.autoshooting == 1:
+            print("autotriggered")
+            if self.magVar > 0 and self.coolbool == False:
+                self.shoot()
+
+
     def get_ammo_left(self):
         return self.magVar
 
@@ -422,7 +437,9 @@ class Gun():
         return self.coolbool
 
     def use_up_event(self, event):
-        pass
+        if self.auto == True and event.key == self.shootkey:
+            print("upkey")
+            self.autoshooting = False
         
 class TempText(Text):
     def __init__(self, text, font, color, x, y):

@@ -128,7 +128,8 @@ def episode1():
 
         
     modeEpi1Event = GameHandler()
-    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 15, 7, 60, 12, 20, True)
+    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 15, 7, 60, 12, 20, False)
+    
     episode1On = True
     episodePhaseVar = 0
     frameType = 'normal'
@@ -137,7 +138,7 @@ def episode1():
         drawScrollingBackground()
         ammoDisp = Text("Ammo Left: " + str(playerShip.gun.get_ammo_left()), grb.medfont, [255, 255, 255], 25, 350)
         coolDownDisp = Text("Cooling Down: " + str(playerShip.gun.coolbool), grb.medfont, [200, 255, 255], 10, 410)
-
+        
         if bool(modeEpi1Event.get_custom_objects()) == False:
             modeEpi1Event.key_event_use()
         else:
@@ -148,7 +149,7 @@ def episode1():
         #elif frameType == 'spawn':
             #pass
         pygame.display.flip()
-        grb.gameClock.tick(30)
+        grb.gameClock.tick(15)
 
 
 
