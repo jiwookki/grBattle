@@ -170,7 +170,6 @@ def DetectKeyPressesStorySel():
 while True:
     if grb.gamemode == 1:
         print ("grb.gamemode 1")
-        modeSet(2)
         grb.gamemode = 2
         mode1Event = EventHandler()
         mode1Event.key_event_use()    
@@ -263,4 +262,4 @@ while True:
     else:
         print("invalid gamemode")
         sys.exit()
-    grb.gameClock.tick_busy_loop(15)
+    grb.gameClock.tick(30)

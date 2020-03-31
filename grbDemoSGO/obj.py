@@ -21,12 +21,18 @@ def getAllEvents():
         listOfEventsOut.append(ev2)
     grb.lisOfCustomEvents = []
     return listOfEventsOut
+
+
+
 def CalPixelSpeed(px):
     global gameClock
     fps = grb.gameClock.get_rawtime()
     TTrueSpeed = px / fps * 100
     #TTrueSpeed = truespeed - truespeed * 2
     return TTrueSpeed
+
+
+
 class Sound():
     def __init__(self, filename, channel):
         self.sound = pygame.mixer.Sound(filename)
@@ -88,6 +94,10 @@ class Object():
         newY = self.y + trueMoveY
         self.x = newX
         self.y = newY
+        grb.screen.blit(self.sprite, [self.x, self.y])
+    def change_pos(self, x, y):
+        self.x = x
+        self.y = y
         grb.screen.blit(self.sprite, [self.x, self.y])
 
  
@@ -241,7 +251,7 @@ class KeyUser():
                     self.func()
         else:
                 self.func()
-    def use_up_event():
+    def use_up_event(self, event):
         pass 
 
 
@@ -257,6 +267,8 @@ class Ship(GameObject):
         self.x = x
         self.y = y
         self.sprite = pygame.image.load(filename)
+        self.size_x = sizex
+        self.size_y = sizey
         self.hitbox = pygame.Rect(x, y, sizex, sizey)
         self.keyup = keylist[0]
         self.keydown = keylist[1]
@@ -291,6 +303,7 @@ class Ship(GameObject):
         #print("player every frame")
         self.x += self.dx
         self.y += self.dy
+        self.gun.every_frame_event()
     def shoot(self):
         self.gun.shoot()
 
@@ -307,24 +320,28 @@ class Bullet(GameObject):
         self.shot = False
         #self.shot is the variable that tells if the bullet still exists in the map or not.
     def go_fire(self):
+        print(self.shootcounter)
         self.shootcounter += 1
-        if self.shootcounter < self.range:
+        print("gofire")
+        if self.shootcounter <= self.range:
             if self.shot == False:
                 self.shot = True
-                if self.direction == "up":
-                    self.y += self.gun.speed
-                elif self.direction == "down":
-                    self.y -= self.gun.speed
-                elif self.direction == "left":
-                    self.x -= self.gun.speed
-                elif self.direction == "right":
-                    self.x += self.gun.speed
-                else:
-                    raise ValueError("Custom error: ship's direction (horizOrVerti) var set to wrong value")
+            if self.direction == "up":
+                self.y -= CalPixelSpeed(self.gun.speed)
+            elif self.direction == "down":
+                self.y += CalPixelSpeed(self.gun.speed)
+            elif self.direction == "left":
+                self.x -= CalPixelSpeed(self.gun.speed)
+            elif self.direction == "right":
+                self.x += CalPixelSpeed(self.gun.speed)
+            else:
+                raise ValueError("Custom error: ship's direction (horizOrVerti) var set to wrong value")
+            print("shotmov")
             grb.screen.blit(self.sprite, [self.x, self.y])
         else:
             self.shot = "spent"
-            self.gunparent.bulletlist.pop(self)
+            self.gun.bulletlist.remove(self)
+            print("spent")
     def shot(self):
         return self.shot
 class Gun():
@@ -342,6 +359,7 @@ class Gun():
         self.range = rangegun
         self.speed = speed
         self.cooltime = firespeed
+        self.autoshooting = None
         self.currentcooldown = 0
         self.coolbool = False
         self.magSize = magSize
@@ -349,29 +367,38 @@ class Gun():
         self.reloading = False
         self.currentReloadTime = 0
         self.reloadtime = reloadTime
+        print("autofalse init")
     def shoot(self):
         if self.coolbool == False and self.reloading == False:
             newbullet = Bullet(self.bulletsprite, self.bulletRectPara[0], self.bulletRectPara[1], self.direction, self.bulletRectPara[2], self.bulletRectPara[3], self)
+            newbullet.change_pos(self.parentship.x, self.parentship.y)
+            self.magVar -= 1
             self.bulletlist.append(newbullet)
             newbullet.go_fire()
             self.coolbool = True
-        else:
-            if self.currentcooldown < self.cooltime:
-                self.currentcooldown += 1
-            else:
-                self.currentcooldown = 0
-                self.coolbool = False
+
     def reload(self):
         self.reloading = True
 
     def use_down_event(self, event):
-        if event.key == self.shootkey and self.magVar > 0 and self.currentcooldown == 0:
-            self.shoot()
-            self.magVar -= 1
-            self.coolbool = True
-        elif self.magVar <= 0:
-            pass
+        if self.auto == True:
+            print("auto")
+            if event.key == self.shootkey:
+                print("autoed")
+                self.autoshooting = True
+                print(str(self.autoshooting) + "beg")
+
+        else:
+            print("manual")
+            if event.key == self.shootkey and self.magVar > 0 and self.coolbool == False:
+                self.shoot()
+                self.coolbool = True
+            elif self.magVar <= 0:
+                print("empty clip")
+            elif self.coolbool == True:
+                print("still cooling")
     def every_frame_event(self):
+        print(str(self.autoshooting))
         for bullet in self.bulletlist:
             bullet.go_fire()
         if self.coolbool == True:
@@ -381,13 +408,14 @@ class Gun():
 
             elif self.currentcooldown >= self.cooltime:
                 self.coolbool = False
+                self.currentcooldown = 0
 
         if self.reloading == True:
 
-            if self.currentReloadTime < self.reloadTime:
+            if self.currentReloadTime < self.reloadtime:
                 self.currentReloadTime += 1
 
-            elif self.currentReloadTime >= self.reloadTime:
+            elif self.currentReloadTime >= self.reloadtime:
 
                 self.currentReloadTime = 0
                 self.reloading = False
@@ -396,6 +424,12 @@ class Gun():
             if self.magVar <= 0:
                 self.reload()
 
+        if self.autoshooting == 1:
+            print("autotriggered")
+            if self.magVar > 0 and self.coolbool == False:
+                self.shoot()
+
+
     def get_ammo_left(self):
         return self.magVar
 
@@ -403,7 +437,9 @@ class Gun():
         return self.coolbool
 
     def use_up_event(self, event):
-        pass
+        if self.auto == True and event.key == self.shootkey:
+            print("upkey")
+            self.autoshooting = False
         
 class TempText(Text):
     def __init__(self, text, font, color, x, y):
@@ -470,6 +506,8 @@ class Selector():
                 self.centerval = 0 
     def get_selected(self):
         return self.centerval
+    def use_up_event(self, event):
+        pass
 
 
 

@@ -73,18 +73,22 @@ def cutscene1():
     cutsceneRawText = cut1File[cut1File.find("(((") + 3:cut1File.find(")))")]
     cutsceneTextList = []
     cutscene1Text = []
-    for EachLine in cutsceneRawText.split("\n"):  
+    for EachLine in cutsceneRawText.split("\n"):
+        print("append cutscene text")  
         cutsceneTextList.append(EachLine)
     for eachVar in cutsceneTextList:
         if fastCutscene == False:
+            print("creating sprites")
             cutscene1Text.append(AnimText(eachVar, grb.bigfont, [255, 255, 255], 100, 250, 1))
     for currentcutText in cutscene1Text:
+        print(fastCutscene)
         if fastCutscene == False:
             cutsceneWait = 0
             for current_length in range(0, currentcutText.gtLen()):
                 delayAmountMeasurer = KeyUser(pygame.K_RETURN, modeCut1Event, delayCutsceneFrame)
                 grb.screen.fill((0, 0, 0))
                 if fastCutscene == False:
+                    print("animating")
                     currentcutText.animate_blit()
                 else:
                     break
@@ -124,7 +128,8 @@ def episode1():
 
         
     modeEpi1Event = GameHandler()
-    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 15, 7, 500, 12, 60, True)
+    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 15, 7, 60, 12, 20, False)
+    
     episode1On = True
     episodePhaseVar = 0
     frameType = 'normal'
@@ -132,10 +137,13 @@ def episode1():
         grb.screen.fill((0, 0, 0))
         drawScrollingBackground()
         ammoDisp = Text("Ammo Left: " + str(playerShip.gun.get_ammo_left()), grb.medfont, [255, 255, 255], 25, 350)
+        coolDownDisp = Text("Cooling Down: " + str(playerShip.gun.coolbool), grb.medfont, [200, 255, 255], 10, 410)
+        
         if bool(modeEpi1Event.get_custom_objects()) == False:
             modeEpi1Event.key_event_use()
         else:
             modeEpi1Event.all_event_use()
+            print("all")
         #if frameType == 'normal':
         playerShip.blit()
         #elif frameType == 'spawn':
