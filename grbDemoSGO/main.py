@@ -170,6 +170,7 @@ def DetectKeyPressesStorySel():
 while True:
     if grb.gamemode == 1:
         print ("grb.gamemode 1")
+        modeSet(2)
         grb.gamemode = 2
         mode1Event = EventHandler()
         mode1Event.key_event_use()    

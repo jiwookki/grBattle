@@ -241,7 +241,7 @@ class KeyUser():
                     self.func()
         else:
                 self.func()
-    def use_up_event(self, event):
+    def use_up_event():
         pass 
 
 
@@ -470,8 +470,6 @@ class Selector():
                 self.centerval = 0 
     def get_selected(self):
         return self.centerval
-    def use_up_event(self, event):
-        pass
 
 
 
