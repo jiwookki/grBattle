@@ -258,7 +258,7 @@ class KeyUser():
 
 
 class Ship(GameObject):
-    def __init__(self, keylist, filename, eventhandler, speedPerFrame, x, y, sizex, sizey, orient, bulletsprite, bulletrect, bulletspeed, bulletrate, bulletrange, ammocapacity, reloadtime, auto):
+    def __init__(self, keylist, filename, eventhandler, speedPerFrame, x, y, sizex, sizey, orient, bulletsprite, bulletrect, bulletspeed, bulletrate, bulletrange, ammocapacity, reloadtime, auto, shootSound, reloadSound, reloadStartSound):
         # the keylist should go up, down, left, right, same as most
         # early home computer's cursor keys.
         self.handler = eventhandler
@@ -276,7 +276,10 @@ class Ship(GameObject):
         self.keyright = keylist[3]
         self.keyshoot = keylist[4]
         self.speed = speedPerFrame
-        self.gun = Gun(self.keyshoot, self.handler, bulletsprite, bulletrect, orient, bulletspeed, bulletrate, self, [self.x, self.y], bulletrange, ammocapacity, reloadtime, auto)
+        shootsound = Sound(shootSound, grb.sfxchannel)
+        reloadsound = Sound(reloadSound, grb.sfxchannel)
+        reloadstartsound = Sound(reloadStartSound, grb.sfxchannel)
+        self.gun = Gun(self.keyshoot, self.handler, bulletsprite, bulletrect, orient, bulletspeed, bulletrate, self, [self.x, self.y], bulletrange, ammocapacity, reloadtime, auto, shootsound, reloadsound, reloadstartsound)
         self.orient = orient
         self.usualspeed = speedPerFrame
         self.dx = 0
@@ -345,7 +348,7 @@ class Bullet(GameObject):
     def shot(self):
         return self.shot
 class Gun():
-    def __init__(self, shootkey, eventhandler, bulletsprite, bulletX_Y_Sx_Sy, horizOrVerti, speed, firespeed, parent_ship, pos, rangegun, magSize, reloadTime, automatic):
+    def __init__(self, shootkey, eventhandler, bulletsprite, bulletX_Y_Sx_Sy, horizOrVerti, speed, firespeed, parent_ship, pos, rangegun, magSize, reloadTime, automatic, shootsound, reloadsound, reloadstartsound):
         eventhandler.add_key_user(self)
         self.auto = automatic
         self.shootkey = shootkey
@@ -367,10 +370,15 @@ class Gun():
         self.reloading = False
         self.currentReloadTime = 0
         self.reloadtime = reloadTime
+        self.shootsound = shootsound
+        self.reloadsound = reloadsound
+        self.reloadstartsound = reloadstartsound
         print("autofalse init")
     def shoot(self):
         if self.coolbool == False and self.reloading == False:
             newbullet = Bullet(self.bulletsprite, self.bulletRectPara[0], self.bulletRectPara[1], self.direction, self.bulletRectPara[2], self.bulletRectPara[3], self)
+            if bool(self.shootsound) == True:
+                self.shootsound.play()
             newbullet.change_pos(self.parentship.x, self.parentship.y)
             self.magVar -= 1
             self.bulletlist.append(newbullet)
@@ -379,6 +387,7 @@ class Gun():
 
     def reload(self):
         self.reloading = True
+        self.reloadstartsound.play()
 
     def use_down_event(self, event):
         if self.auto == True:
@@ -420,6 +429,7 @@ class Gun():
                 self.currentReloadTime = 0
                 self.reloading = False
                 self.magVar = self.magSize
+                self.reloadsound.play()
         else:
             if self.magVar <= 0:
                 self.reload()

@@ -112,8 +112,11 @@ def episode1():
     global scrollVar, subScrollVar, playerShip, gameClock
     scrollVar = 720
     subScrollVar = 0
+    
+    prevScrollVar = 0
+    prevSubScrollVar = 0
     def drawScrollingBackground(): 
-        global scrollVar, subScrollVar
+        global scrollVar, subScrollVar, 
         backgroundSprite = TempObject("backdrop.jpg", 200, scrollVar)
         foregroundSprite = TempObject("subbackdrop.jpg", 200, subScrollVar)
         if subScrollVar >= 720:
@@ -125,11 +128,13 @@ def episode1():
         movementVar = CalPixelSpeed(30)
         scrollVar += movementVar
         subScrollVar += movementVar
-
+    pygame.mixer.quit()
+    pygame.mixer.init(frequency=44100)
         
     modeEpi1Event = GameHandler()
-    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 15, 7, 60, 12, 20, False)
-    
+    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 30, 7, 60, 12, 60, True, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav")
+    epi1Music = Sound("Episode1Music.ogg", grb.musicchannel)
+    epi1Music.multiplay(-1)
     episode1On = True
     episodePhaseVar = 0
     frameType = 'normal'
@@ -149,7 +154,7 @@ def episode1():
         #elif frameType == 'spawn':
             #pass
         pygame.display.flip()
-        grb.gameClock.tick(15)
+        grb.gameClock.tick(30)
 
 
 
