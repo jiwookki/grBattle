@@ -26,7 +26,7 @@ def getAllEvents():
 
 def CalPixelSpeed(px):
     global gameClock
-    fps = grb.gameClock.get_rawtime()
+    fps = grb.gameClock.get_time()
     TTrueSpeed = px / fps * 100
     #TTrueSpeed = truespeed - truespeed * 2
     return TTrueSpeed

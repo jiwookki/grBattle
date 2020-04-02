@@ -89,7 +89,6 @@ def TurnDownVol():
 def SetToTitleScreen():
     global gamemode
     #global selected
-    modeSet(1)
     menumusic.stop()
     grb.gamemode = 1
     mainmusic.multiplay(-1)
