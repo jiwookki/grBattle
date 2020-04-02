@@ -103,31 +103,35 @@ def cutscene1():
                     cutsceneWait += 1
                     modeCut1Event.key_event_use()
                     pygame.display.flip()   
-                    episode1()
+    episode1()
 
+def drawScrollingBackground(): 
+        global scrollVar, subScrollVar, ScrollIMPF
+        backgroundSprite = TempObject("backdrop.jpg", 200, scrollVar)
+        foregroundSprite = TempObject("subbackdrop.jpg", 200, subScrollVar)
+        movementVar = int(CalPixelSpeed(30))
+        scrollVar += movementVar
+        subScrollVar += movementVar
+        if subScrollVar >= 720:
+            subScrollVar = -720
+            scrollVar = 0
+
+            
+        elif scrollVar >= 720:
+            scrollVar = -720
+            subScrollVar = 0
+
+
+        backgroundSprite.blit()
+        foregroundSprite.blit()
 
 
 
 def episode1():
-    global scrollVar, subScrollVar, playerShip, gameClock
+    global scrollVar, subScrollVar, playerShip
     scrollVar = 720
     subScrollVar = 0
-    
-    prevScrollVar = 0
-    prevSubScrollVar = 0
-    def drawScrollingBackground(): 
-        global scrollVar, subScrollVar, 
-        backgroundSprite = TempObject("backdrop.jpg", 200, scrollVar)
-        foregroundSprite = TempObject("subbackdrop.jpg", 200, subScrollVar)
-        if subScrollVar >= 720:
-            subScrollVar = -720
-        elif scrollVar >= 720:
-            scrollVar = -720
-        backgroundSprite.blit()
-        foregroundSprite.blit()
-        movementVar = CalPixelSpeed(30)
-        scrollVar += movementVar
-        subScrollVar += movementVar
+        
     pygame.mixer.quit()
     pygame.mixer.init(frequency=44100)
         
@@ -154,7 +158,7 @@ def episode1():
         #elif frameType == 'spawn':
             #pass
         pygame.display.flip()
-        grb.gameClock.tick(30)
+        grb.gameClock.tick(24)
 
 
 
