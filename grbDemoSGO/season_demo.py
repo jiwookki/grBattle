@@ -26,7 +26,7 @@ class TinyFastEnemy():
         self.x = oldx + moved_x
         self.y = oldy + moved_y
         return [self.x, self.y]
-    def normal_movement(self, player_coor):
+    def normal_AI(self, player_coor):
         if self.directionRefreshCounter == 15:
             self.directionRefreshCounter = 0
             self.currentDirection = random.randint(0, 3)
@@ -44,6 +44,7 @@ class TinyFastEnemy():
                 self.x -= CalPixelSpeed(10)
                 self.y += CalPixelSpeed(8)
     def player_movement(self, old_pos, new_pos, player_movement):
+
         self.normal_movement(new_pos)
     def take_damage(self, knockbackVar, amountOfDamage):
         self.hELTH -= amountOfDamage
@@ -136,7 +137,7 @@ def episode1():
     pygame.mixer.init(frequency=44100)
         
     modeEpi1Event = GameHandler()
-    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 30, 7, 60, 12, 60, True, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav")
+    playerShip = Ship([pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_SPACE], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 30, 7, 60, 12, 60, True, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav")
     epi1Music = Sound("Episode1Music.ogg", grb.musicchannel)
     epi1Music.multiplay(-1)
     episode1On = True
