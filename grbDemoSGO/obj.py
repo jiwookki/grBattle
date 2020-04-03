@@ -193,11 +193,14 @@ class GameHandler(EventHandler):
                 #print("pygame.quit")
                 sys.exit()
             for objects in self.CustomEventObjectslist:
-                if self.playerShip.
-                
+                if pygame.Rect.colliderect(self.playerShip.hitbox, objects.hitbox) == True:
+                    if objects.friendly == False:
+                        self.playership.take_damage(objects.damage)
+                        objects.collision_player(self.playership.get_pos())
+                    
 
 
-
+            
 
 
     def all_event_use(self):
@@ -254,7 +257,7 @@ class KeyUser():
 
 
 class Ship(GameObject):
-    def __init__(self, keylist, filename, eventhandler, speedPerFrame, x, y, sizex, sizey, orient, bulletsprite, bulletrect, bulletspeed, bulletrate, bulletrange, bulletdmg, ammocapacity, reloadtime, auto, shootSound, reloadSound, reloadStartSound):
+    def __init__(self, keylist, filename, eventhandler, speedPerFrame, x, y, sizex, sizey, orient, bulletsprite, bulletrect, bulletspeed, bulletrate, bulletrange, bulletdmg, ammocapacity, reloadtime, auto, shootSound, reloadSound, reloadStartSound, damagedSound, hitpoints):
         # the keylist should go up, down, left, right, same as most
         # early home computer's cursor keys.
         self.handler = eventhandler
@@ -275,11 +278,13 @@ class Ship(GameObject):
         shootsound = Sound(shootSound, grb.sfxchannel)
         reloadsound = Sound(reloadSound, grb.sfxchannel)
         reloadstartsound = Sound(reloadStartSound, grb.sfxchannel)
+        self.damagedSound = Sound(damagedSound, grb.sfxchannel)
         self.gun = Gun(self.keyshoot, self.handler, bulletsprite, bulletrect, orient, bulletspeed, bulletrate, self, [self.x, self.y], bulletrange, ammocapacity, reloadtime, auto, shootsound, reloadsound, reloadstartsound)
         self.orient = orient
         self.usualspeed = speedPerFrame
         self.dx = 0
         self.dy = 0
+        self.hp = hp
     def use_down_event(self, event):
         if event.key == self.keydown:
             #print("down downkey")
@@ -321,8 +326,12 @@ class Ship(GameObject):
         self.gun.every_frame_event()
     def shoot(self):
         self.gun.shoot()
-    def get_rect(self):
-        return self.
+    def take_damage(self, amount_of_damage):
+        self.hp -= amount_of_damage
+        self.damagedSound.play()
+    def get_pos(self):
+        return [self.x, self.y]
+
 
 class Bullet(GameObject):
     def __init__(self, sprite, sizex, sizey, horizOrVerti, x, y, gunparent):
