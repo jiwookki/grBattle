@@ -51,7 +51,7 @@ class TinyFastEnemy():
         self.hELTH -= amountOfDamage
         self.y += CalPixelSpeed(4)
     def get_destroyed(self, player_coor):
-        pass
+        self.living = False
         
 
 
