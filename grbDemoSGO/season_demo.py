@@ -43,14 +43,16 @@ class TinyFastEnemy():
             elif self.currentDirection == 3:
                 self.x -= CalPixelSpeed(10)
                 self.y += CalPixelSpeed(8)
-    def player_movement(self, old_pos, new_pos, player_movement):
+        grb.screen.blit(self.sprite, [self.x, self.y])
 
+    def player_movement(self, old_pos, new_pos, player_movement):
         self.normal_movement(new_pos)
     def take_damage(self, knockbackVar, amountOfDamage):
         self.hELTH -= amountOfDamage
         self.y += CalPixelSpeed(4)
     def get_destroyed(self, player_coor):
         pass
+        
 
 
 
@@ -132,14 +134,15 @@ def episode1():
     global scrollVar, subScrollVar, playerShip
     scrollVar = 720
     subScrollVar = 0
-        
+    waveMode = 0       
     pygame.mixer.quit()
     pygame.mixer.init(frequency=44100)
         
     modeEpi1Event = GameHandler()
-    playerShip = Ship([pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_SPACE], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 30, 7, 60, 12, 60, True, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav")
+    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_l], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 20, 7, 14, 12, 17.5, 60, False, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav")
     epi1Music = Sound("Episode1Music.ogg", grb.musicchannel)
     epi1Music.multiplay(-1)
+
     episode1On = True
     episodePhaseVar = 0
     frameType = 'normal'
@@ -154,10 +157,7 @@ def episode1():
         else:
             modeEpi1Event.all_event_use()
             print("all")
-        #if frameType == 'normal':
         playerShip.blit()
-        #elif frameType == 'spawn':
-            #pass
         pygame.display.flip()
         grb.gameClock.tick(24)
 

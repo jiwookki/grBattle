@@ -180,7 +180,7 @@ class GameHandler(EventHandler):
         #print("eveyrframe")
         for objects in self.CustomEventObjectslist:
             objects.every_frame_event()
-        for event in getAllEvents():
+        for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key  == pygame.K_ESCAPE:
                     sys.exit()
@@ -193,16 +193,12 @@ class GameHandler(EventHandler):
                 #print("pygame.quit")
                 sys.exit()
             for objects in self.CustomEventObjectslist:
-                if event.type == grb.BULLETAPPROACHING:
-                    objects.dodge_bullet(event.where)
-                elif event.type == grb.PLAYERMOVEMENT:
-                    objects.player_movement()
-                else:
-                    objects.normal_movement()
-                if event.type == grb.BULLETIMPACT:
-                    objects.take_damage()
-                if objects.hELTH <= 0:
-                    objects.get_destroyed()
+                if self.playerShip.
+                
+
+
+
+
 
     def all_event_use(self):
         self.key_event_use()
@@ -258,7 +254,7 @@ class KeyUser():
 
 
 class Ship(GameObject):
-    def __init__(self, keylist, filename, eventhandler, speedPerFrame, x, y, sizex, sizey, orient, bulletsprite, bulletrect, bulletspeed, bulletrate, bulletrange, ammocapacity, reloadtime, auto, shootSound, reloadSound, reloadStartSound):
+    def __init__(self, keylist, filename, eventhandler, speedPerFrame, x, y, sizex, sizey, orient, bulletsprite, bulletrect, bulletspeed, bulletrate, bulletrange, bulletdmg, ammocapacity, reloadtime, auto, shootSound, reloadSound, reloadStartSound):
         # the keylist should go up, down, left, right, same as most
         # early home computer's cursor keys.
         self.handler = eventhandler
@@ -325,6 +321,8 @@ class Ship(GameObject):
         self.gun.every_frame_event()
     def shoot(self):
         self.gun.shoot()
+    def get_rect(self):
+        return self.
 
 class Bullet(GameObject):
     def __init__(self, sprite, sizex, sizey, horizOrVerti, x, y, gunparent):
@@ -575,7 +573,7 @@ def showInfoBoard(list_of_things_to_blit, x, y):
         grb.screen.blit(infoBoard, [x, y])
         for obje in list_of_things_to_blit:
             obje.blit()
-        backText = Text("[B] Back", grb.medfont, [75, 255, 255], x + 100, y + 350)
+        backText = Text("[B] Ok", grb.medfont, [75, 255, 255], x + 100, y + 350)
         modeInfoEvent.key_event_use()
         pygame.display.flip()
 
