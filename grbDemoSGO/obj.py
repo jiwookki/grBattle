@@ -304,8 +304,24 @@ class Ship(GameObject):
             self.dx = 0
     def every_frame_event(self):
         #print("player every frame")
-        self.x += self.dx
-        self.y += self.dy
+        if self.x < 800 and self.x > 230:
+            self.x += self.dx
+        elif self.x >= 800:
+            self.x = 780
+        elif self.x < 230:
+            self.x = 250
+        else:
+            raise ValueError("Ship out of bounds")
+
+        if self.y < 700 and self.y > 50:
+            self.y += self.dy
+        elif self.y >= 700:
+            self.y = 680
+        elif self.y <= 50:
+            self.y = 70
+        else:
+            raise ValueError("Ship out of bounds")
+
         self.gun.every_frame_event()
     def shoot(self):
         self.gun.shoot()
@@ -379,7 +395,7 @@ class Gun():
             newbullet = Bullet(self.bulletsprite, self.bulletRectPara[0], self.bulletRectPara[1], self.direction, self.bulletRectPara[2], self.bulletRectPara[3], self)
             if bool(self.shootsound) == True:
                 self.shootsound.play()
-            newbullet.change_pos(self.parentship.x, self.parentship.y)
+            newbullet.change_pos(self.parentship.x + self.parentship.size_x / 3, self.parentship.y)
             self.magVar -= 1
             self.bulletlist.append(newbullet)
             newbullet.go_fire()
