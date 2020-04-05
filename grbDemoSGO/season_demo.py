@@ -20,7 +20,9 @@ class TinyFastEnemy():
         self.hitbox = pygame.Rect[self.x, self.y, self.sx, self.sy]
         self.living = True
         self.friendly = False
-        gamehandler.add_custom_user(self)
+        self.bulletlist = []
+        self.gamehander = gamehandler
+        self.gamehandler.add_custom_user(self)
     def move_self(self, moved_x, moved_y):
         oldx = self.x
         oldy = self.y
@@ -50,9 +52,10 @@ class TinyFastEnemy():
         self.normal_movement(new_pos)
     def take_damage(self, knockbackVar, amountOfDamage):
         self.hELTH -= amountOfDamage
-        self.y += CalPixelSpeed(4)
+        self.y += CalPixelSpeed(knock)
     def get_destroyed(self, player_coor):
         self.living = False
+        self.gamehandler.remove(self)
     def collision_player(self, player_coor):
         self.get_destroyed(player_coor)
         
@@ -142,7 +145,7 @@ def episode1():
     pygame.mixer.init(frequency=44100)
         
     modeEpi1Event = GameHandler()
-    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_l], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 20, 7, 14, 12, 17.5, 60, False, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav", "damaged.wav", 400)
+    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_l], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 20, 7, 14, 17.5, 12, 60, False, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav", "damaged.wav", 400)
     epi1Music = Sound("Episode1Music.ogg", grb.musicchannel)
     epi1Music.multiplay(-1)
 
@@ -158,7 +161,7 @@ def episode1():
         if bool(modeEpi1Event.get_custom_objects()) == False:
             modeEpi1Event.key_event_use()
         else:
-            modeEpi1Event.all_event_use()
+            modeEpi1Event.custom_event_use()
             print("all")
         playerShip.blit()
         pygame.display.flip()

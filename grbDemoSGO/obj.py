@@ -160,25 +160,25 @@ class EventHandler():
 class GameHandler(EventHandler):
     def __init__(self):
         super().__init__()
-        self.CustomEventObjectslist = []
+        self.EnemiesList = []
 
     def key_event_use(self):
         super().key_event_use()
         self.playerShip.every_frame_event()
 
     def add_custom_user(self, user):
-        self.CustomEventObjectslist.append(user)
+        self.EnemiesList.append(user)
 
     def addShip(self, newship):
         self.playerShip = newship
 
     def get_custom_objects(self):
-        return self.CustomEventObjectslist
+        return self.EnemiesList
 
     def custom_event_use(self):
         self.playerShip.every_frame_event()
         #print("eveyrframe")
-        for objects in self.CustomEventObjectslist:
+        for objects in self.EnemiesList:
             objects.every_frame_event()
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -192,21 +192,19 @@ class GameHandler(EventHandler):
             elif event.type == pygame.QUIT:
                 #print("pygame.quit")
                 sys.exit()
-            for objects in self.CustomEventObjectslist:
+            for objects in self.EnemiesList:
                 if pygame.Rect.colliderect(self.playerShip.hitbox, objects.hitbox) == True:
                     if objects.friendly == False:
                         self.playership.take_damage(objects.damage)
-                        objects.collision_player(self.playership.get_pos())
-                    
-
-
-            
-
-
-    def all_event_use(self):
-        self.key_event_use()
-        self.custom_event_use()
-
+                        objects.collision_player(self.playerShip.get_pos())
+                for bullet in self.playerShip.get_bullets():
+                    if pygame.Rect.colliderect(bullet.hitbox. objects.hitbox):
+                        objects.take_damage(self.playerShip.get_knockback(), self.playership.get_damage())
+                for bullet in objects.bulletlist:
+                    if pygame.Rect.colliderect(bullet.hitbox, self.playerShip.hitbox):
+                        self.playerShip.take_damage(objects.damage)
+                if objects.hELTH <= 0:
+                    objects.get_destroyed()
 
         
 
@@ -279,31 +277,37 @@ class Ship(GameObject):
         reloadsound = Sound(reloadSound, grb.sfxchannel)
         reloadstartsound = Sound(reloadStartSound, grb.sfxchannel)
         self.damagedSound = Sound(damagedSound, grb.sfxchannel)
-        self.gun = Gun(self.keyshoot, self.handler, bulletsprite, bulletrect, orient, bulletspeed, bulletrate, self, [self.x, self.y], bulletrange, ammocapacity, reloadtime, auto, shootsound, reloadsound, reloadstartsound)
+        self.gun = Gun(self.keyshoot, self.handler, bulletsprite, bulletrect, orient, bulletspeed, bulletrate, self, [self.x, self.y], bulletrange, ammocapacity, reloadtime, auto, shootsound, reloadsound, reloadstartsound, bulletdmg)
         self.orient = orient
         self.usualspeed = speedPerFrame
         self.dx = 0
         self.dy = 0
-        self.hp = hp
+        self.hp = hitpoints
+        self.movedThisFrame = False
     def use_down_event(self, event):
         if event.key == self.keydown:
             #print("down downkey")
             self.dy = CalPixelSpeed(self.usualspeed)
+            self.movedThisFrame = True
         elif event.key == self.keyup:
             #print("up downkey")
             self.dy = CalPixelSpeed(self.usualspeed - self.usualspeed * 2)
+            self.movedThisFrame = True
         if event.key == self.keyright:
             #print("right downkey")
             self.dx = CalPixelSpeed(self.usualspeed)
+            self.movedThisFrame = True
         elif event.key == self.keyleft:
             #print("left downkey")
             self.dx = CalPixelSpeed(self.usualspeed - self.usualspeed * 2)
+            self.movedThisFrame = True
     def use_up_event(self, event):
         if event.key == self.keyup or event.key == self.keydown:
             self.dy = 0
         if event.key == self.keyleft or event.key == self.keyright:
             self.dx = 0
     def every_frame_event(self):
+        self.movedThisFrame = False
         #print("player every frame")
         if self.x < 800 and self.x > 230:
             self.x += self.dx
@@ -331,6 +335,14 @@ class Ship(GameObject):
         self.damagedSound.play()
     def get_pos(self):
         return [self.x, self.y]
+    def get_bullets(self):
+        return self.gun.bulletlist
+    def get_knockback(self):
+        return self.gun.bulletvelospeed / (self.gun.cooltime / 2)
+    def get_damage(self):
+        return self.gun.amountOfDamage
+    def moved(self):
+        return self.movedThisFrame
 
 
 class Bullet(GameObject):
@@ -371,7 +383,7 @@ class Bullet(GameObject):
     def shot(self):
         return self.shot
 class Gun():
-    def __init__(self, shootkey, eventhandler, bulletsprite, bulletX_Y_Sx_Sy, horizOrVerti, speed, firespeed, parent_ship, pos, rangegun, magSize, reloadTime, automatic, shootsound, reloadsound, reloadstartsound):
+    def __init__(self, shootkey, eventhandler, bulletsprite, bulletX_Y_Sx_Sy, horizOrVerti, speed, firespeed, parent_ship, pos, rangegun, magSize, reloadTime, automatic, shootsound, reloadsound, reloadstartsound, bulletdamage):
         eventhandler.add_key_user(self)
         self.auto = automatic
         self.shootkey = shootkey
@@ -396,6 +408,7 @@ class Gun():
         self.shootsound = shootsound
         self.reloadsound = reloadsound
         self.reloadstartsound = reloadstartsound
+        self.amountOfDamage = bulletdamage
         print("autofalse init")
     def shoot(self):
         if self.coolbool == False and self.reloading == False:
