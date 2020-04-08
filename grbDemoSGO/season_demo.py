@@ -15,13 +15,17 @@ class TinyFastEnemy():
         self.y = y
         self.sx = sx
         self.sy = sy
+        print(self.x)
+        print(self.y)
+        print(self.sx)
+        print(self.sy)
         self.directionRefreshCounter = 0
         self.currentDirection = random.randint(0, 3)
-        self.hitbox = pygame.Rect[self.x, self.y, self.sx, self.sy]
+        self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
         self.living = True
         self.friendly = False
         self.bulletlist = []
-        self.gamehander = gamehandler
+        self.gamehandler = gamehandler
         self.gamehandler.add_custom_user(self)
     def move_self(self, moved_x, moved_y):
         oldx = self.x
@@ -32,32 +36,55 @@ class TinyFastEnemy():
     def normal_AI(self, player_coor):
         if self.directionRefreshCounter == 15:
             self.directionRefreshCounter = 0
-            self.currentDirection = random.randint(0, 3)
+            self.currentDirection = random.randint(0, 5)
         elif self.directionRefreshCounter < 15:
             if self.currentDirection == 0:
-                self.x += CalPixelSpeed(10)
-                self.y -= CalPixelSpeed(10)
+                self.x += CalPixelSpeed(8)
+                self.y += CalPixelSpeed(10)
             elif self.currentDirection == 1:
-                self.x -= CalPixelSpeed(10)
-                self.y -= CalPixelSpeed(10)
+                self.x -= CalPixelSpeed(8)
+                self.y += CalPixelSpeed(10)
             elif self.currentDirection == 2:
-                self.x += CalPixelSpeed(10)
+                self.x += CalPixelSpeed(8)
                 self.y += CalPixelSpeed(8)
-            elif self.currentDirection == 3:
-                self.x -= CalPixelSpeed(10)
-                self.y += CalPixelSpeed(8)
-        grb.screen.blit(self.sprite, [self.x, self.y])
+            elif self.currentDirection == 3: 
+                self.x -= CalPixelSpeed(8)
+                self.y -= CalPixelSpeed(2)
+            elif self.currentDirection == 4:
+                self.x += CalPixelSpeed(16)
+                self.y -= CalPixelSpeed(16)
+            elif self.currentDirection == 5:
+                self.x -= CalPixelSpeed(16)
+                self.y -= CalPixelSpeed(16)
+        if self.y >= 680:
+            self.y = 60
 
-    def player_movement(self, old_pos, new_pos, player_movement):
-        self.normal_movement(new_pos)
+        if bool(checkInBoundsX(self.x)):
+            self.x = checkInBoundsX(self.x)
+        if bool(checkInBoundsY(self.y)):
+            self.y = checkInBoundsY(self.y)
+        self.hitbox = self.hitbox.move(self.x, self.y)
+
+
+
+        grb.screen.blit(self.sprite, [self.x, self.y])
+        pygame.draw.rect(grb.screen, [0, 0, 0], self.hitbox)
+
+    def player_movement(self, new_pos):
+        print("player mov")
+        self.normal_AI(new_pos)
     def take_damage(self, knockbackVar, amountOfDamage):
+        print("boom")
         self.hELTH -= amountOfDamage
-        self.y += CalPixelSpeed(knock)
+        self.y += CalPixelSpeed(knockbackVar)
     def get_destroyed(self, player_coor):
+        print("destroyed")
         self.living = False
         self.gamehandler.remove(self)
     def collision_player(self, player_coor):
         self.get_destroyed(player_coor)
+    def every_frame_event(self):
+        pass
         
 
 
@@ -135,17 +162,40 @@ def drawScrollingBackground():
         foregroundSprite.blit()
 
 
+def spawnEnemyRoutines():
+    global waveMode, waveFrameCounter, modeEpi1Event
+
+    if waveMode == 0:
+        waveFrameCounter += 1
+        if waveFrameCounter == 96:
+            waveFrameCounter = 0
+        waveMode = 1
+        
+        waveMode = 1
+    elif waveMode == 1:
+        for x in range(0, 4):
+            newEnemy = TinyFastEnemy("tinyfast-ep1.png", random.randint(310, 620), 60, None, None, 64, 64, modeEpi1Event)
+        waveMode = 2
+    elif waveMode == 2:
+        if bool(modeEpi1Event.get_custom_objects()) == False:
+            waveMode = 3
+            print("wavemode3")
+    elif waveMode == 3:
+        waveMode = 0
+
+
 
 def episode1():
-    global scrollVar, subScrollVar, playerShip
+    global scrollVar, subScrollVar, playerShip, waveMode, waveFrameCounter, modeEpi1Event
     scrollVar = 720
     subScrollVar = 0
-    waveMode = 0       
+    waveMode = 0
+    waveFrameCounter = 0
     pygame.mixer.quit()
     pygame.mixer.init(frequency=44100)
         
     modeEpi1Event = GameHandler()
-    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_l], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 20, 7, 14, 17.5, 12, 60, False, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav", "damaged.wav", 400)
+    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_l], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 20, 1, 14, 1000, 200, 60, True, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav", "damaged.wav", 400)
     epi1Music = Sound("Episode1Music.ogg", grb.musicchannel)
     epi1Music.multiplay(-1)
 
@@ -157,12 +207,8 @@ def episode1():
         drawScrollingBackground()
         ammoDisp = Text("Ammo Left: " + str(playerShip.gun.get_ammo_left()), grb.medfont, [255, 255, 255], 25, 350)
         coolDownDisp = Text("Cooling Down: " + str(playerShip.gun.coolbool), grb.medfont, [200, 255, 255], 10, 410)
-        
-        if bool(modeEpi1Event.get_custom_objects()) == False:
-            modeEpi1Event.key_event_use()
-        else:
-            modeEpi1Event.custom_event_use()
-            print("all")
+        modeEpi1Event.custom_event_use()  
+        spawnEnemyRoutines()
         playerShip.blit()
         pygame.display.flip()
         grb.gameClock.tick(24)
@@ -178,4 +224,12 @@ def episode1():
 
 def episode2():
     pass
+
+
+
+cutscene1()
+
+
+
+
 
