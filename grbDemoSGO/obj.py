@@ -22,6 +22,21 @@ def getAllEvents():
     grb.lisOfCustomEvents = []
     return listOfEventsOut
 
+def checkInBoundsX(x):
+    if x < 800 and x > 230:
+        return None
+    elif x >= 800:
+        return 780
+    elif x < 230:
+        return 250
+def checkInBoundsY(y):
+    if y < 700 and y > 50:
+        return None
+    elif y >= 700:
+        return 680
+    elif y <= 50:
+        return 70
+ 
 
 
 def CalPixelSpeed(px):
@@ -185,26 +200,34 @@ class GameHandler(EventHandler):
                 if event.key  == pygame.K_ESCAPE:
                     sys.exit()
                 for objects in self.keyobjectslist:
-                    objects.use_up_event(event)
+                    objects.use_down_event(event)
             if event.type == pygame.KEYUP:
                 for objects in self.keyobjectslist:
-                    objects.use_down_event(event)
+                    objects.use_up_event(event)
             elif event.type == pygame.QUIT:
                 #print("pygame.quit")
                 sys.exit()
-            for objects in self.EnemiesList:
-                if pygame.Rect.colliderect(self.playerShip.hitbox, objects.hitbox) == True:
-                    if objects.friendly == False:
-                        self.playership.take_damage(objects.damage)
-                        objects.collision_player(self.playerShip.get_pos())
-                for bullet in self.playerShip.get_bullets():
-                    if pygame.Rect.colliderect(bullet.hitbox. objects.hitbox):
-                        objects.take_damage(self.playerShip.get_knockback(), self.playership.get_damage())
-                for bullet in objects.bulletlist:
-                    if pygame.Rect.colliderect(bullet.hitbox, self.playerShip.hitbox):
-                        self.playerShip.take_damage(objects.damage)
-                if objects.hELTH <= 0:
-                    objects.get_destroyed()
+
+        for objects in self.EnemiesList:
+            if self.playerShip.hitbox.colliderect(objects.hitbox) == True:
+                if objects.friendly == False:
+                    self.playership.take_damage(objects.damage)
+                    objects.collision_player(self.playerShip.get_pos())
+            for bullet in self.playerShip.get_bullets():
+                if bullet.hitbox.colliderect(objects.hitbox) == True:
+                    objects.take_damage(self.playerShip.get_knockback(), self.playerShip.get_damage())
+                    print("bullet collision")
+            for bullet in objects.bulletlist:
+                if bullet.hitbox.colliderect(self.playerShip.hitbox) == True:
+                    self.playerShip.take_damage(objects.damage)
+            if self.playerShip.moved():
+                objects.player_movement(self.playerShip.get_pos())
+            else:
+                objects.normal_AI(self.playerShip.get_pos())
+            if objects.hELTH <= 0:
+                objects.get_destroyed(self.playerShip.get_pos())
+    def remove(self, object__):
+        self.EnemiesList.remove(object__)
 
         
 
@@ -288,6 +311,7 @@ class Ship(GameObject):
         if event.key == self.keydown:
             #print("down downkey")
             self.dy = CalPixelSpeed(self.usualspeed)
+            print("bebebebebbbex")
             self.movedThisFrame = True
         elif event.key == self.keyup:
             #print("up downkey")
@@ -309,25 +333,21 @@ class Ship(GameObject):
     def every_frame_event(self):
         self.movedThisFrame = False
         #print("player every frame")
-        if self.x < 800 and self.x > 230:
-            self.x += self.dx
-        elif self.x >= 800:
-            self.x = 780
-        elif self.x < 230:
-            self.x = 250
-        else:
-            raise ValueError("Ship out of bounds")
 
-        if self.y < 700 and self.y > 50:
-            self.y += self.dy
-        elif self.y >= 700:
-            self.y = 680
-        elif self.y <= 50:
-            self.y = 70
+        if bool(checkInBoundsX(self.x)):
+            self.x = checkInBoundsX(self.x)
         else:
-            raise ValueError("Ship out of bounds")
+            self.x += self.dx
+        if bool(checkInBoundsY(self.y)):
+            self.y = checkInBoundsY(self.y)
+        else:
+            self.y += self.dy
 
         self.gun.every_frame_event()
+        self.hitbox = self.hitbox.move(self.x, self.y)
+        pygame.draw.rect(grb.screen, [0, 0, 0], self.hitbox)
+
+
     def shoot(self):
         self.gun.shoot()
     def take_damage(self, amount_of_damage):
@@ -350,7 +370,9 @@ class Bullet(GameObject):
         self.sprite = pygame.image.load(sprite)
         self.x = x
         self.y = y
-        self.hitbox = pygame.Rect(self.x, self.y, sizex, sizey)
+        self.sizex = sizex
+        self.sizey = size
+        self.hitbox = pygame.Rect(self.x, self.y, self.sizex, self.sizey)
         self.direction = horizOrVerti
         self.gun = gunparent
         self.shootcounter = 0
@@ -358,9 +380,7 @@ class Bullet(GameObject):
         self.shot = False
         #self.shot is the variable that tells if the bullet still exists in the map or not.
     def go_fire(self):
-        print(self.shootcounter)
         self.shootcounter += 1
-        print("gofire")
         if self.shootcounter <= self.range:
             if self.shot == False:
                 self.shot = True
@@ -374,12 +394,12 @@ class Bullet(GameObject):
                 self.x += CalPixelSpeed(self.gun.speed)
             else:
                 raise ValueError("Custom error: ship's direction (horizOrVerti) var set to wrong value")
-            print("shotmov")
+            self.hitbox = pygame.Rect(self.x, self.y, )
+            pygame.draw.rect(grb.screen, [0, 50, 0], self.hitbox)
             grb.screen.blit(self.sprite, [self.x, self.y])
         else:
             self.shot = "spent"
             self.gun.bulletlist.remove(self)
-            print("spent")
     def shot(self):
         return self.shot
 class Gun():
@@ -409,7 +429,6 @@ class Gun():
         self.reloadsound = reloadsound
         self.reloadstartsound = reloadstartsound
         self.amountOfDamage = bulletdamage
-        print("autofalse init")
     def shoot(self):
         if self.coolbool == False and self.reloading == False:
             newbullet = Bullet(self.bulletsprite, self.bulletRectPara[0], self.bulletRectPara[1], self.direction, self.bulletRectPara[2], self.bulletRectPara[3], self)
@@ -427,9 +446,7 @@ class Gun():
 
     def use_down_event(self, event):
         if self.auto == True:
-            print("auto")
             if event.key == self.shootkey:
-                print("autoed")
                 self.autoshooting = True
                 print(str(self.autoshooting) + "beg")
 
@@ -443,7 +460,6 @@ class Gun():
             elif self.coolbool == True:
                 print("still cooling")
     def every_frame_event(self):
-        print(str(self.autoshooting))
         for bullet in self.bulletlist:
             bullet.go_fire()
         if self.coolbool == True:
@@ -471,7 +487,6 @@ class Gun():
                 self.reload()
 
         if self.autoshooting == 1:
-            print("autotriggered")
             if self.magVar > 0 and self.coolbool == False:
                 self.shoot()
 
