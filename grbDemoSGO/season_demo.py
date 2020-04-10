@@ -24,6 +24,7 @@ class TinyFastEnemy():
         self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
         self.living = True
         self.friendly = False
+        self.damage = 35
         self.bulletlist = []
         self.gamehandler = gamehandler
         self.gamehandler.add_custom_user(self)
@@ -63,13 +64,8 @@ class TinyFastEnemy():
             self.x = checkInBoundsX(self.x)
         if bool(checkInBoundsY(self.y)):
             self.y = checkInBoundsY(self.y)
-        self.hitbox = self.hitbox.move(self.x, self.y)
-
-
-
+        self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
         grb.screen.blit(self.sprite, [self.x, self.y])
-        pygame.draw.rect(grb.screen, [0, 0, 0], self.hitbox)
-
     def player_movement(self, new_pos):
         print("player mov")
         self.normal_AI(new_pos)
@@ -79,8 +75,9 @@ class TinyFastEnemy():
         self.y += CalPixelSpeed(knockbackVar)
     def get_destroyed(self, player_coor):
         print("destroyed")
-        self.living = False
-        self.gamehandler.remove(self)
+        if self.living == False:
+            self.living = False
+            self.gamehandler.remove(self)
     def collision_player(self, player_coor):
         self.get_destroyed(player_coor)
     def every_frame_event(self):

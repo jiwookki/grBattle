@@ -211,7 +211,7 @@ class GameHandler(EventHandler):
         for objects in self.EnemiesList:
             if self.playerShip.hitbox.colliderect(objects.hitbox) == True:
                 if objects.friendly == False:
-                    self.playership.take_damage(objects.damage)
+                    self.playerShip.take_damage(objects.damage)
                     objects.collision_player(self.playerShip.get_pos())
             for bullet in self.playerShip.get_bullets():
                 if bullet.hitbox.colliderect(objects.hitbox) == True:
@@ -289,7 +289,7 @@ class Ship(GameObject):
         self.sprite = pygame.image.load(filename)
         self.size_x = sizex
         self.size_y = sizey
-        self.hitbox = pygame.Rect(x, y, sizex, sizey)
+        self.hitbox = pygame.Rect(self.x, self.y, self.size_x, self.size_y)
         self.keyup = keylist[0]
         self.keydown = keylist[1]
         self.keyleft = keylist[2]
@@ -323,7 +323,7 @@ class Ship(GameObject):
             self.movedThisFrame = True
         elif event.key == self.keyleft:
             #print("left downkey")
-            self.dx = CalPixelSpeed(self.usualspeed - self.usualspeed * 2)
+            self.dxCalPixelSpeed(self.usualspeed - self.usualspeed * 2)
             self.movedThisFrame = True
     def use_up_event(self, event):
         if event.key == self.keyup or event.key == self.keydown:
@@ -344,8 +344,7 @@ class Ship(GameObject):
             self.y += self.dy
 
         self.gun.every_frame_event()
-        self.hitbox = self.hitbox.move(self.x, self.y)
-        pygame.draw.rect(grb.screen, [0, 0, 0], self.hitbox)
+        self.hitbox = pygame.Rect(self.x, self.y, self.size_x, self.size_y)
 
 
     def shoot(self):
@@ -366,13 +365,13 @@ class Ship(GameObject):
 
 
 class Bullet(GameObject):
-    def __init__(self, sprite, sizex, sizey, horizOrVerti, x, y, gunparent):
+    def __init__(self, sprite, x, y, horizOrVerti, sizex, sizey, gunparent):
         self.sprite = pygame.image.load(sprite)
         self.x = x
         self.y = y
-        self.sizex = sizex
-        self.sizey = size
-        self.hitbox = pygame.Rect(self.x, self.y, self.sizex, self.sizey)
+        self.size_x = sizex
+        self.size_y = sizey
+        self.hitbox = pygame.Rect(self.x, self.y, self.size_x, self.size_y)
         self.direction = horizOrVerti
         self.gun = gunparent
         self.shootcounter = 0
@@ -394,8 +393,7 @@ class Bullet(GameObject):
                 self.x += CalPixelSpeed(self.gun.speed)
             else:
                 raise ValueError("Custom error: ship's direction (horizOrVerti) var set to wrong value")
-            self.hitbox = pygame.Rect(self.x, self.y, )
-            pygame.draw.rect(grb.screen, [0, 50, 0], self.hitbox)
+            self.hitbox = pygame.Rect(self.x, self.y, self.size_x, self.size_y)
             grb.screen.blit(self.sprite, [self.x, self.y])
         else:
             self.shot = "spent"
