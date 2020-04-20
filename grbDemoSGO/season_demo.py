@@ -57,7 +57,7 @@ class TinyFastEnemy():
             elif self.currentDirection == 5:
                 self.x -= CalPixelSpeed(16)
                 self.y -= CalPixelSpeed(16)
-        if self.y >= 680:
+        if self.y >= 680:                       
             self.y = 60
 
         if bool(checkInBoundsX(self.x)):
@@ -72,12 +72,12 @@ class TinyFastEnemy():
     def take_damage(self, knockbackVar, amountOfDamage):
         print("boom")
         self.hELTH -= amountOfDamage
-        self.y += CalPixelSpeed(knockbackVar)
+        self.y -= CalPixelSpeed(knockbackVar)
     def get_destroyed(self, player_coor):
         print("destroyed")
         if self.living == False:
             self.living = False
-            self.gamehandler.remove(self)
+        self.gamehandler.remove(self)
     def collision_player(self, player_coor):
         self.get_destroyed(player_coor)
     def every_frame_event(self):
@@ -209,6 +209,8 @@ def episode1():
         playerShip.blit()
         pygame.display.flip()
         grb.gameClock.tick(24)
+        if grb.gamemode == "gameover":
+            break
 
 
 
@@ -224,7 +226,7 @@ def episode2():
 
 
 
-cutscene1()
+#cutscene1()
 
 
 

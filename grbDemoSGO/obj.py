@@ -226,6 +226,9 @@ class GameHandler(EventHandler):
                 objects.normal_AI(self.playerShip.get_pos())
             if objects.hELTH <= 0:
                 objects.get_destroyed(self.playerShip.get_pos())
+        if self.playerShip.hp <= 0:
+            grb.gamemode = "gameover"
+            
     def remove(self, object__):
         self.EnemiesList.remove(object__)
 
@@ -323,7 +326,7 @@ class Ship(GameObject):
             self.movedThisFrame = True
         elif event.key == self.keyleft:
             #print("left downkey")
-            self.dxCalPixelSpeed(self.usualspeed - self.usualspeed * 2)
+            self.dx = CalPixelSpeed(self.usualspeed - self.usualspeed * 2)
             self.movedThisFrame = True
     def use_up_event(self, event):
         if event.key == self.keyup or event.key == self.keydown:

@@ -165,6 +165,15 @@ def DetectKeyPressesStorySel():
     backMenu = KeyUser(pygame.K_b, modeStorySlctEvent, OpenMenu)
     siteOpen = KeyUser(pygame.K_c, modeStorySlctEvent, CopySiteLink)
     useEpisode = KeyUser(pygame.K_s, modeStorySlctEvent, OpenEpisode)
+def showGameOverText():
+    mainGameOver = Text("Game Over", hugfont, [255, 100, 100], 350, 200)
+    gameOverSubTitle = Text("Your ship was destroyed", bigfont, [255, 255, 102], 320, 250)
+    returnInstructions = Text("[B] Back to Episode Menu", medfont, [200, 255, 200], 200, 600)
+
+def DetectKeyPressesGameOver():
+    global modeGameOverEvent
+    backEpisode - KeyUser(pygame.K_b, modeGameOverEvent, )
+
 
 while True:
     if grb.gamemode == 1:
@@ -258,6 +267,9 @@ while True:
     elif grb.gamemode == "episode1":
         print("episode 1 mode")
         season_demo.episode1()
+    elif grb.gamemode == "gameover":
+        modeGameOverEvent = EventHandler()
+        showGameOverText()
     else:
         print("invalid gamemode")
         sys.exit()
