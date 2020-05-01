@@ -4,10 +4,42 @@ Gamma Ray Battle Offical Planning Document
 
 
 
+Ship stats:
+ROF = Rate of Fire
+
+
+Delta 1
+400 HP
+Blaster-type gun, medium ROF (abt 3.5/sec or 7/2sec), non-auto, damage about 20HP/shot
+
+Soloro X
+300 HP
+Laser-type gun, maximum ROF (1 per frame), auto, damage about 0.7.shot
+
+Galactica 42
+425HP
+Minigun-type gun, high ROF (abt10/sec), auto, damage about 1.2/shot, takes 5 seconds to ramp up to max speed, so first second 1, second second 2, third 4, 5th 8 and 6th as full speed.
+
+KRX Tracker 
+500HP
+Large cannon-type gun, low ROF (abt 1 fer 1.4 seconds), non-auto, damage about 50/shot 
+
+
+
+Enemy Types
+Tinyfast Enemy: 35HP, 
+
+
+
+
 
 
 
 Story
+
+Character
+    Profile
+        Name: NoreGamma/Nore ve Gamma/Noregam
 
 
 Season 1 (12 Episodes?)
@@ -25,11 +57,19 @@ Season 1 (12 Episodes?)
 
             Ship in atmosphere of planet Krenthos
 
-            Dialogue: "H-Hello? Is anyone recieving this?", glitching, low signal strength
-            Dialogue: "This is Officer "
+            Dialogue: Comms "H-Hello? Is anyone recieving this?", glitching, low signal strength
+            Dialogue: Comms "This is Commander Noregam, requesting as-*krzzt*-cation data at coordinates N13-*krzzzt*, squadron Del-*krzzzzzzzzzzzzzzzt*-now." low signal strength
+            Dialogue: "They'll come. For now, all I have to do is survive..."
 
+            Tutorial
 
-        Gameplay
+            Dialogue: Comms "Hello? Anybody? SOS-*krrrzt*-"
+            Dialogue: Ship Message "SOS Broadcast Error 104"
+            Dialogue: "Damnit. I'll have to make camp here. I'll try and find a suitable location."
+
+            Ships:
+
+            6x Tinyfast (3 right, 3 left, x-pattern)
 
 
 
