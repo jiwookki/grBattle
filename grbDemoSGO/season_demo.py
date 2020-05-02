@@ -171,7 +171,7 @@ def spawnEnemyRoutines():
         
         waveMode = 1
     elif waveMode == 1:
-        for x in range(0, 4):
+        for x in range(0, 6):
             newEnemy = TinyFastEnemy("tinyfast-ep1.png", random.randint(310, 620), 60, None, None, 64, 64, modeEpi1Event)
         waveMode = 2
     elif waveMode == 2:
