@@ -35,28 +35,29 @@ class TinyFastEnemy():
         self.y = oldy + moved_y
         return [self.x, self.y]
     def normal_AI(self, player_coor):
-        if self.directionRefreshCounter == 15:
+        if self.directionRefreshCounter >= 15:
             self.directionRefreshCounter = 0
             self.currentDirection = random.randint(0, 5)
         elif self.directionRefreshCounter < 15:
             if self.currentDirection == 0:
-                self.x += CalPixelSpeed(8)
-                self.y += CalPixelSpeed(10)
+                self.x += CalPixelSpeed(2)
+                self.y += CalPixelSpeed(12)
             elif self.currentDirection == 1:
-                self.x -= CalPixelSpeed(8)
-                self.y += CalPixelSpeed(10)
+                self.x -= CalPixelSpeed(2)
+                self.y += CalPixelSpeed(16)
             elif self.currentDirection == 2:
-                self.x += CalPixelSpeed(8)
+                self.x += CalPixelSpeed(12)
                 self.y += CalPixelSpeed(8)
             elif self.currentDirection == 3: 
-                self.x -= CalPixelSpeed(8)
-                self.y -= CalPixelSpeed(2)
+                self.x -= CalPixelSpeed(12)
+                self.y -= CalPixelSpeed(28)
             elif self.currentDirection == 4:
                 self.x += CalPixelSpeed(16)
                 self.y -= CalPixelSpeed(16)
             elif self.currentDirection == 5:
                 self.x -= CalPixelSpeed(16)
                 self.y -= CalPixelSpeed(16)
+            self.directionRefreshCounter += 1
         if self.y >= 680:                       
             self.y = 60
 
@@ -192,7 +193,7 @@ def episode1():
     pygame.mixer.init(frequency=44100)
         
     modeEpi1Event = GameHandler()
-    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_l], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 20, 1, 14, 1000, 200, 60, True, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav", "damaged.wav", 400)
+    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_l], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 20, 8, 14, 50, 12, 60, False, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav", "damaged.wav", 400)
     playerHPBar = HPBar("ship-hp-bar.PNG", playerShip.get_hp(), 500, 770, 100, [50, 255, 100], 50, 70)
     epi1Music = Sound("Episode1Music.ogg", grb.musicchannel)
     epi1Music.multiplay(-1)
@@ -200,8 +201,10 @@ def episode1():
     episode1On = True
     episodePhaseVar = 0
     frameType = 'normal'
+    for x in range(0, 15):
+        grb.gameClock.tick(24)
     while episode1On:
-        grb.screen.fill((40, 40, 40))
+        grb.screen.fill((30, 30, 30))
         drawScrollingBackground()
         ammoDisp = Text("Ammo Left: " + str(playerShip.gun.get_ammo_left()), grb.medfont, [255, 255, 255], 800, 350)
         coolDownDisp = Text("Cooling Down: " + str(playerShip.gun.coolbool), grb.medfont, [200, 255, 255], 800, 415)
@@ -230,7 +233,7 @@ def episode2():
 
 #cutscene1()
 
-
+episode1()
 
 
 

@@ -230,7 +230,8 @@ class GameHandler(EventHandler):
             grb.gamemode = "gameover"
             
     def remove(self, object__):
-        self.EnemiesList.remove(object__)
+        if object__ in self.EnemiesList:
+            self.EnemiesList.remove(object__)
 
         
 
@@ -616,7 +617,7 @@ class HPBar():
         self.normcolor = colorlist
     def blit(self):
         grb.screen.blit(self.sprite, [self.x, self.y])
-        if self.currentHP <= self.maxHP / 4.25:
+        if self.currentHP <= self.maxHP / 4.2:
             self.color = [255, 25, 25]
         else:
             self.color = self.normcolor
