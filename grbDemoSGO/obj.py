@@ -23,12 +23,12 @@ def getAllEvents():
     return listOfEventsOut
 
 def checkInBoundsX(x):
-    if x < 800 and x > 230:
+    if x < 750 and x > 80:
         return None
     elif x >= 800:
-        return 780
-    elif x < 230:
-        return 250
+        return 730
+    elif x < 80:
+        return 100
 def checkInBoundsY(y):
     if y < 700 and y > 50:
         return None
@@ -365,6 +365,8 @@ class Ship(GameObject):
         return self.gun.amountOfDamage
     def moved(self):
         return self.movedThisFrame
+    def get_hp(self):
+        return self.hp
 
 
 class Bullet(GameObject):
@@ -598,6 +600,36 @@ class AnimText():
     def resetAnim():
         self.characterCurrent = 0
 
+class HPBar():
+    def __init__(self, sprite, maxHP, spritelength, x, y, colorlist, height, true_height):
+        self.sprite = pygame.image.load(sprite)
+        self.x = x
+        self.y = y
+        self.height = height
+        self.theight = true_height
+        self.maxHP = maxHP
+        self.length = spritelength
+        self.ratio_hp_length = self.maxHP / self.length
+        self.currentHP = self.maxHP
+        self.hpBar = None
+        self.color = colorlist
+        self.normcolor = colorlist
+    def blit(self):
+        grb.screen.blit(self.sprite, [self.x, self.y])
+        if self.currentHP <= self.maxHP / 4.25:
+            self.color = [255, 25, 25]
+        else:
+            self.color = self.normcolor
+
+        pygame.draw.line(grb.screen, self.color, [self.x, self.y + self.theight / 2], [self.x + self.currentHP / self.ratio_hp_length, self.y + self.theight / 2], self.height)
+    def update_hp(self, new_hp):
+        self.currentHP = new_hp
+        self.blit()
+        
+
+
+
+
 def showInfoBoard(list_of_things_to_blit, x, y):
     global infoOn, medfont
     def closeBoard():
@@ -640,7 +672,7 @@ def OpenMenu():
 
 
 
-
+ 
 
 
 

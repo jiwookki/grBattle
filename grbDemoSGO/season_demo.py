@@ -140,8 +140,8 @@ def cutscene1():
 
 def drawScrollingBackground(): 
         global scrollVar, subScrollVar, ScrollIMPF
-        backgroundSprite = TempObject("backdrop.jpg", 200, scrollVar)
-        foregroundSprite = TempObject("subbackdrop.jpg", 200, subScrollVar)
+        backgroundSprite = TempObject("backdrop.jpg", 50, scrollVar)
+        foregroundSprite = TempObject("subbackdrop.jpg", 50, subScrollVar)
         movementVar = int(CalPixelSpeed(30))
         scrollVar += movementVar
         subScrollVar += movementVar
@@ -193,6 +193,7 @@ def episode1():
         
     modeEpi1Event = GameHandler()
     playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_l], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 20, 1, 14, 1000, 200, 60, True, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav", "damaged.wav", 400)
+    playerHPBar = HPBar("ship-hp-bar.PNG", playerShip.get_hp(), 500, 770, 100, [50, 255, 100], 50, 70)
     epi1Music = Sound("Episode1Music.ogg", grb.musicchannel)
     epi1Music.multiplay(-1)
 
@@ -200,10 +201,11 @@ def episode1():
     episodePhaseVar = 0
     frameType = 'normal'
     while episode1On:
-        grb.screen.fill((0, 0, 0))
+        grb.screen.fill((40, 40, 40))
         drawScrollingBackground()
-        ammoDisp = Text("Ammo Left: " + str(playerShip.gun.get_ammo_left()), grb.medfont, [255, 255, 255], 25, 350)
-        coolDownDisp = Text("Cooling Down: " + str(playerShip.gun.coolbool), grb.medfont, [200, 255, 255], 10, 410)
+        ammoDisp = Text("Ammo Left: " + str(playerShip.gun.get_ammo_left()), grb.medfont, [255, 255, 255], 800, 350)
+        coolDownDisp = Text("Cooling Down: " + str(playerShip.gun.coolbool), grb.medfont, [200, 255, 255], 800, 415)
+        playerHPBar.update_hp(playerShip.get_hp())
         modeEpi1Event.custom_event_use()  
         spawnEnemyRoutines()
         playerShip.blit()
