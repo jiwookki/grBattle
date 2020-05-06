@@ -27,9 +27,10 @@ Large cannon-type gun, low ROF (abt 1 fer 1.4 seconds), non-auto, damage about 5
 
 
 Enemy Types
-Tinyfast Enemy: 35HP, 
-
-
+Tinyfast Enemy: 35HP, 14-32 ppf, melee attack, dmg = 35
+SmallDistancedShooter: 50HP, 8-20ppf, long-range attack,  doesn't go near player, similar x pos but far away y pos, dmg = 60
+SlowTank: 350HP, 5-15 ppf, 5-shot bullets, very slow, goes toward player, large, extra damage when bump into player and explosion
+AsteroidLauncher: 60HP, 7-18ppf, asteroid launch, launches slow-moving asteroids, dmg = 80
 
 
 

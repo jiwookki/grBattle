@@ -209,23 +209,33 @@ class GameHandler(EventHandler):
                 sys.exit()
 
         for objects in self.EnemiesList:
+
             if self.playerShip.hitbox.colliderect(objects.hitbox) == True:
+
                 if objects.friendly == False:
                     self.playerShip.take_damage(objects.damage)
                     objects.collision_player(self.playerShip.get_pos())
+
             for bullet in self.playerShip.get_bullets():
+
                 if bullet.hitbox.colliderect(objects.hitbox) == True:
+                    bullet.collide()
                     objects.take_damage(self.playerShip.get_knockback(), self.playerShip.get_damage())
                     print("bullet collision")
+
             for bullet in objects.bulletlist:
+
                 if bullet.hitbox.colliderect(self.playerShip.hitbox) == True:
                     self.playerShip.take_damage(objects.damage)
+
             if self.playerShip.moved():
                 objects.player_movement(self.playerShip.get_pos())
             else:
                 objects.normal_AI(self.playerShip.get_pos())
+
             if objects.hELTH <= 0:
                 objects.get_destroyed(self.playerShip.get_pos())
+
         if self.playerShip.hp <= 0:
             grb.gamemode = "gameover"
             
@@ -282,7 +292,7 @@ class KeyUser():
 
 
 class Ship(GameObject):
-    def __init__(self, keylist, filename, eventhandler, speedPerFrame, x, y, sizex, sizey, orient, bulletsprite, bulletrect, bulletspeed, bulletrate, bulletrange, bulletdmg, ammocapacity, reloadtime, auto, shootSound, reloadSound, reloadStartSound, damagedSound, hitpoints):
+    def __init__(self, keylist, filename, eventhandler, speedPerFrame, x, y, sizex, sizey, orient, bulletsprite, bulletrect, bulletspeed, bulletrate, bulletrange, bulletdmg, ammocapacity, reloadtime, auto, shootSound, reloadSound, reloadStartSound, damagedSound, hitpoints, numOfPierce):
         # the keylist should go up, down, left, right, same as most
         # early home computer's cursor keys.
         self.handler = eventhandler
@@ -304,13 +314,14 @@ class Ship(GameObject):
         reloadsound = Sound(reloadSound, grb.sfxchannel)
         reloadstartsound = Sound(reloadStartSound, grb.sfxchannel)
         self.damagedSound = Sound(damagedSound, grb.sfxchannel)
-        self.gun = Gun(self.keyshoot, self.handler, bulletsprite, bulletrect, orient, bulletspeed, bulletrate, self, [self.x, self.y], bulletrange, ammocapacity, reloadtime, auto, shootsound, reloadsound, reloadstartsound, bulletdmg)
+        self.gun = Gun(bulletsprite, bulletrect, orient, bulletspeed, bulletrate, self, [self.x, self.y], bulletrange, ammocapacity, reloadtime, auto, shootsound, reloadsound, reloadstartsound, bulletdmg, numOfPierce)
         self.orient = orient
         self.usualspeed = speedPerFrame
         self.dx = 0
         self.dy = 0
         self.hp = hitpoints
         self.movedThisFrame = False
+        self.auto = auto
     def use_down_event(self, event):
         if event.key == self.keydown:
             #print("down downkey")
@@ -329,11 +340,24 @@ class Ship(GameObject):
             #print("left downkey")
             self.dx = CalPixelSpeed(self.usualspeed - self.usualspeed * 2)
             self.movedThisFrame = True
+        if event.key == self.keyshoot:
+            if self.auto == True:
+                self.gun.autoshooting()
+            else:
+                if self.gun.get_ammo_left() > 0 and self.gun.get_cooldown() == False:
+                    self.shoot()
+
+
+
+            
     def use_up_event(self, event):
         if event.key == self.keyup or event.key == self.keydown:
             self.dy = 0
         if event.key == self.keyleft or event.key == self.keyright:
             self.dx = 0
+        if event.key == self.keyshoot and self.auto == True:
+            self.gun.autoshooting()
+
     def every_frame_event(self):
         self.movedThisFrame = False
         #print("player every frame")
@@ -370,8 +394,9 @@ class Ship(GameObject):
         return self.hp
 
 
+
 class Bullet(GameObject):
-    def __init__(self, sprite, x, y, horizOrVerti, sizex, sizey, gunparent):
+    def __init__(self, sprite, x, y, horizOrVerti, sizex, sizey, gunparent, numOfPierce):
         self.sprite = pygame.image.load(sprite)
         self.x = x
         self.y = y
@@ -383,7 +408,12 @@ class Bullet(GameObject):
         self.shootcounter = 0
         self.range = self.gun.range
         self.shot = False
+        self.numPierce = numOfPierce
+        self.currentPierced = 0
         #self.shot is the variable that tells if the bullet still exists in the map or not.
+    def destroy(self):
+        self.shot = "spent"
+        self.gun.bulletlist.remove(self)
     def go_fire(self):
         self.shootcounter += 1
         if self.shootcounter <= self.range:
@@ -402,15 +432,21 @@ class Bullet(GameObject):
             self.hitbox = pygame.Rect(self.x, self.y, self.size_x, self.size_y)
             grb.screen.blit(self.sprite, [self.x, self.y])
         else:
-            self.shot = "spent"
-            self.gun.bulletlist.remove(self)
+            self.destroy()
+
+
+        if self.currentPierced >= self.numPierce:
+            self.destroy()
     def shot(self):
         return self.shot
+    def collide(self):
+        if self.numPierce == 1:
+            self.destroy()
+        else:
+            self.currentPierced += 1
 class Gun():
-    def __init__(self, shootkey, eventhandler, bulletsprite, bulletX_Y_Sx_Sy, horizOrVerti, speed, firespeed, parent_ship, pos, rangegun, magSize, reloadTime, automatic, shootsound, reloadsound, reloadstartsound, bulletdamage):
-        eventhandler.add_key_user(self)
+    def __init__(self, bulletsprite, bulletX_Y_Sx_Sy, horizOrVerti, speed, firespeed, parent_ship, pos, rangegun, magSize, reloadTime, automatic, shootsound, reloadsound, reloadstartsound, bulletdamage, numberOfPiercing):
         self.auto = automatic
-        self.shootkey = shootkey
         self.parentship = parent_ship
         self.bulletvelospeed = speed
         self.firespeed = firespeed
@@ -421,7 +457,7 @@ class Gun():
         self.range = rangegun
         self.speed = speed
         self.cooltime = firespeed
-        self.autoshooting = None
+        self.autoshooting = False
         self.currentcooldown = 0
         self.coolbool = False
         self.magSize = magSize
@@ -433,9 +469,10 @@ class Gun():
         self.reloadsound = reloadsound
         self.reloadstartsound = reloadstartsound
         self.amountOfDamage = bulletdamage
+        self.numPierce = numberOfPiercing
     def shoot(self):
         if self.coolbool == False and self.reloading == False:
-            newbullet = Bullet(self.bulletsprite, self.bulletRectPara[0], self.bulletRectPara[1], self.direction, self.bulletRectPara[2], self.bulletRectPara[3], self)
+            newbullet = Bullet(self.bulletsprite, self.bulletRectPara[0], self.bulletRectPara[1], self.direction, self.bulletRectPara[2], self.bulletRectPara[3], self, self.numPierce)
             if bool(self.shootsound) == True:
                 self.shootsound.play()
             newbullet.change_pos(self.parentship.x + self.parentship.size_x / 3, self.parentship.y)
@@ -447,22 +484,6 @@ class Gun():
     def reload(self):
         self.reloading = True
         self.reloadstartsound.play()
-
-    def use_down_event(self, event):
-        if self.auto == True:
-            if event.key == self.shootkey:
-                self.autoshooting = True
-                print(str(self.autoshooting) + "beg")
-
-        else:
-            print("manual")
-            if event.key == self.shootkey and self.magVar > 0 and self.coolbool == False:
-                self.shoot()
-                self.coolbool = True
-            elif self.magVar <= 0:
-                print("empty clip")
-            elif self.coolbool == True:
-                print("still cooling")
     def every_frame_event(self):
         for bullet in self.bulletlist:
             bullet.go_fire()
@@ -481,7 +502,7 @@ class Gun():
                 self.currentReloadTime += 1
 
             elif self.currentReloadTime >= self.reloadtime:
-
+ 
                 self.currentReloadTime = 0
                 self.reloading = False
                 self.magVar = self.magSize
@@ -490,7 +511,7 @@ class Gun():
             if self.magVar <= 0:
                 self.reload()
 
-        if self.autoshooting == 1:
+        if self.autoshooting == True:
             if self.magVar > 0 and self.coolbool == False:
                 self.shoot()
 
@@ -501,10 +522,11 @@ class Gun():
     def get_cooldown(self):
         return self.coolbool
 
-    def use_up_event(self, event):
-        if self.auto == True and event.key == self.shootkey:
-            print("upkey")
+    def autoshooting(self):
+        if self.autoshooting:
             self.autoshooting = False
+        else:
+            self.autoshooting = True
         
 class TempText(Text):
     def __init__(self, text, font, color, x, y):

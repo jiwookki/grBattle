@@ -83,10 +83,57 @@ class TinyFastEnemy():
         self.get_destroyed(player_coor)
     def every_frame_event(self):
         pass
-        
 
 
-
+class SmallLongShooter():
+    def __init__(self, sprite, x, y, projsprite, projbox, sx, sy, gamehandler):
+        self.x = x
+        self.y = y
+        self.size_x = sx
+        self.size_y = sy
+        self.hitbox = pygame.Rect(self.x, self.y, self.size_x, self.size_y)
+        self.sprite = pygame.image.load(sprite)
+        self.hELTH = 50
+        self.damage = 60 
+        self.bulletlist = []
+        self.living = False
+        self.friendly = False
+        self.gamehandler = gamehandler
+        self.gamehandler.add_custom_user(self)
+        self.gun = Gun("smallLongBullet.png", [self.x, self.y, self.size_x, self.size_y], "down", 8, 4, self, [self.x, self.y], 10, 10, 0, False, None, None, None, 60, 1)
+        self.dirMode = 0
+    def normal_movement(self, player_pos):
+        if self.dirMode >= 0 and self.dirmode <= 12:
+            if self.x <= player_pos[0]:
+                self.x += random.randint(5, 17)
+            elif self.x > player_pos[0]:
+                self.x -= random.randint(5, 17)
+            if self.y < player_pos[1] - 450:
+                self.y += random.randint(3, 12)
+            else:
+                self.y += random.randint(-6, 6)
+            self.dirMode += 1
+        elif self.dirmode >= 13 and self.dirmode <= 24:
+            self.x += random.randint(-17, 17)
+            self.y += random.randint(-3, 3)
+            self.dirMode += 1
+        elif self.dirmode >= 25:
+            self.dirmode = 0
+    def player_movement(self, player_pos):
+        self.normal_movement(player_pos)
+    def take_damage(self, knockback, damage):
+        self.hELTH -= damage
+        self.y -= knockback + knockback / 2
+    def get_destroyed(self, player_coor):
+        print("destroyed")
+        if self.living == False:
+            self.living = False
+        self.gamehandler.remove(self)
+    def collision_player(self, player_coor):
+        self.y -= 80
+        self.hELTH - 25
+    def every_frame_event(self):
+        self.gun.every_frame_event 
 
 
 def delayCutsceneFrame():
@@ -193,7 +240,7 @@ def episode1():
     pygame.mixer.init(frequency=44100)
         
     modeEpi1Event = GameHandler()
-    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_l], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 20, 8, 14, 50, 12, 60, False, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav", "damaged.wav", 400)
+    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_l], "delta1.GIF", modeEpi1Event, 8, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 20, 8, 14, 50, 12, 60, False, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav", "damaged.wav", 400, 1)
     playerHPBar = HPBar("ship-hp-bar.PNG", playerShip.get_hp(), 500, 770, 100, [50, 255, 100], 50, 70)
     epi1Music = Sound("Episode1Music.ogg", grb.musicchannel)
     epi1Music.multiplay(-1)
