@@ -41,7 +41,7 @@ def checkInBoundsY(y):
 
 def CalPixelSpeed(px):
     global gameClock
-    fps = grb.gameClock.get_time()
+    fps = grb.gameClock.get_fps()
     TTrueSpeed = px / fps * 100
     #TTrueSpeed = truespeed - truespeed * 2
     return TTrueSpeed
@@ -483,7 +483,8 @@ class Gun():
 
     def reload(self):
         self.reloading = True
-        self.reloadstartsound.play()
+        if bool(self.reloadstartsound) == True:
+            self.reloadstartsound.play()
     def every_frame_event(self):
         for bullet in self.bulletlist:
             bullet.go_fire()
@@ -506,7 +507,8 @@ class Gun():
                 self.currentReloadTime = 0
                 self.reloading = False
                 self.magVar = self.magSize
-                self.reloadsound.play()
+                if bool(self.reloadsound):
+                    self.reloadsound.play()
         else:
             if self.magVar <= 0:
                 self.reload()
@@ -527,6 +529,8 @@ class Gun():
             self.autoshooting = False
         else:
             self.autoshooting = True
+    def get_bullets(self):
+        return self.bulletlist
         
 class TempText(Text):
     def __init__(self, text, font, color, x, y):
