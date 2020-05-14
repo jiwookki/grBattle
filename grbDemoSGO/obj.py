@@ -215,7 +215,6 @@ class GameHandler(EventHandler):
                 if objects.friendly == False:
                     self.playerShip.take_damage(objects.damage)
                     objects.collision_player(self.playerShip.get_pos())
-
             for bullet in self.playerShip.get_bullets():
 
                 if bullet.hitbox.colliderect(objects.hitbox) == True:
@@ -228,7 +227,9 @@ class GameHandler(EventHandler):
                 if bullet.hitbox.colliderect(self.playerShip.hitbox) == True:
                     self.playerShip.take_damage(objects.damage)
 
-            if self.playerShip.moved():
+            if bool(self.playerShip.get_bullets()):
+                objects.bullet_incoming(*self.playerShip.get_pos())
+            elif self.playerShip.moved():
                 objects.player_movement(self.playerShip.get_pos())
             else:
                 objects.normal_AI(self.playerShip.get_pos())
@@ -326,11 +327,10 @@ class Ship(GameObject):
         if event.key == self.keydown:
             #print("down downkey")
             self.dy = CalPixelSpeed(self.usualspeed)
-            print("bebebebebbbex")
             self.movedThisFrame = True
         elif event.key == self.keyup:
             #print("up downkey")
-            self.dy = CalPixelSpeed(self.usualspeed - self.usualspeed * 2)
+            self.dy = CalPixelSpeed(self.usualspeed * -1)
             self.movedThisFrame = True
         if event.key == self.keyright:
             #print("right downkey")
@@ -338,7 +338,7 @@ class Ship(GameObject):
             self.movedThisFrame = True
         elif event.key == self.keyleft:
             #print("left downkey")
-            self.dx = CalPixelSpeed(self.usualspeed - self.usualspeed * 2)
+            self.dx = CalPixelSpeed(self.usualspeed * -1)
             self.movedThisFrame = True
         if event.key == self.keyshoot:
             if self.auto == True:

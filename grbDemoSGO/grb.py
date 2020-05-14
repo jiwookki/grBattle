@@ -14,7 +14,7 @@ BULLETIMPACT = "bullet_hit"
 ttlIcon = pygame.image.load("scrIcon.PNG")
 print("screen init")
 pygame.display.set_icon(ttlIcon)
-screen = pygame.display.set_mode((1280, 720))
+screen = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN)
 try:
     pygame.scrap.init()
     print("pygame scrap init")
@@ -53,7 +53,7 @@ class PlayerMovement(CustomBlankEvent):
 class BulletHit():
     def __init__(self, bulletRect):
         self.type = BULLETHIT
-screenmodevar = "window"
+screenmodevar = "fullscreen"
 # global variables
 def ChangeScreenMode():
     global screen

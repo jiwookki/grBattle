@@ -68,7 +68,6 @@ class TinyFastEnemy():
         self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
         grb.screen.blit(self.sprite, [self.x, self.y])
     def player_movement(self, new_pos):
-        print("player mov")
         self.normal_AI(new_pos)
     def take_damage(self, knockbackVar, amountOfDamage):
         print("boom")
@@ -83,6 +82,10 @@ class TinyFastEnemy():
         self.get_destroyed(player_coor)
     def every_frame_event(self):
         pass
+    def bullet_incoming(self, x, y):
+        if random.randint(0, 2) == 1:
+            self.directionRefreshCounter = 15
+
 
 
 class SmallLongShooter():
@@ -98,27 +101,37 @@ class SmallLongShooter():
         self.bulletlist = []
         self.living = False
         self.friendly = False
+        self.knock = True
+        self.amtKnock = 0
         self.gamehandler = gamehandler
         self.gamehandler.add_custom_user(self)
         self.gun = Gun("smallLongBullet.png", [self.x, self.y, projbox[0], projbox[1]], "down", 8, 4, self, [self.x, self.y], 20, 10, 0, False, None, None, None, 60, 1)
         self.dirMode = 0
     def normal_AI(self, player_pos):
-        if self.dirMode >= 0 and self.dirMode <= 12:
-            if self.x <= player_pos[0]:
-                self.x += random.randint(5, 17)
-            elif self.x > player_pos[0]:
+        if self.dirMode >= 0 and self.dirMode <= 24:
+            if self.x >= player_pos[0]:
+                print("x>")
                 self.x -= random.randint(5, 17)
-            if self.y < player_pos[1] - 600:
+            elif self.x < player_pos[0]:
+                self.x += random.randint(5, 17)
+                print("x<")
+            if self.y < player_pos[1] + 200:
                 self.y += random.randint(3, 12)
-            else:
-                self.y += random.randint(-6, 6)
+                print("ranged")
+            elif self.y >= player_pos[1] + 200:
+                self.y -= random.randint(0, 8)
+                print("unranged")
             self.dirMode += 1
-        elif self.dirMode >= 13 and self.dirMode <= 24:
+        elif self.dirMode >= 28 and self.dirMode <= 34:
             self.x += random.randint(-17, 17)
             self.y += random.randint(-3, 3)
             self.dirMode += 1
-        elif self.dirMode >= 25:
-            self.dirMode = 0
+        else:
+            self.dirMode = 1
+
+        if bool(checkInBoundsY(self.y)) == True:
+            self.y = checkInBoundsY(self.y)
+
     def player_movement(self, player_pos):
         self.normal_AI(player_pos)
     def take_damage(self, knockback, damage):
@@ -130,7 +143,7 @@ class SmallLongShooter():
             self.living = False
         self.gamehandler.remove(self)
     def collision_player(self, player_coor):
-        self.y -= 80
+        self.knock = True
         self.hELTH - 25
     def every_frame_event(self):
         if random.randint(0, 25) == 13:
@@ -139,7 +152,18 @@ class SmallLongShooter():
         grb.screen.blit(self.sprite, [self.x, self.y])
         self.hitbox = pygame.Rect(self.x, self.y, self.size_x, self.size_y)
         self.bulletlist = self.gun.get_bullets()
-
+        if self.amtKnock < 11 and self.knock:
+            self.y -= 8
+        elif amtKnock >= 11:
+            self.knock = False
+            self.amtKnock = 0
+    def bullet_incoming(self, bx, by):
+        if self.x > bx:
+            self.x -= random.randint(1, 15)
+        elif self.x < bx:
+            self.x += random.randint(1, 15)
+        else:
+            self.x += random.randint(-13, 15)
 
 
 def delayCutsceneFrame():
@@ -196,7 +220,7 @@ def drawScrollingBackground():
         global scrollVar, subScrollVar, ScrollIMPF
         backgroundSprite = TempObject("backdrop.jpg", 50, scrollVar)
         foregroundSprite = TempObject("subbackdrop.jpg", 50, subScrollVar)
-        movementVar = int(CalPixelSpeed(30))
+        movementVar = int(CalPixelSpeed(10))
         scrollVar += movementVar
         subScrollVar += movementVar
         if subScrollVar >= 720:
@@ -233,7 +257,7 @@ def spawnEnemyRoutines():
             print("wavemode3")
     elif waveMode == 3:
         for x in range(0, 2):
-            newEnemy = SmallLongShooter("smalllongshoot.png", random.randint(130, 700), random.randint(100, 400), "smallLongBullet.png", 66, 72, modeEpi1Event, [32, 32])
+            newEnemy = SmallLongShooter("smalllongshoot.png", random.randint(130, 700), 620, "smallLongBullet.png", 66, 72, modeEpi1Event, [32, 32])
         for x in range(0, 3):
             newEnemy = TinyFastEnemy("tinyfast-ep1.png", random.randint(310, 620), 60, None, 64, 64, modeEpi1Event)
         waveMode = 4
@@ -291,7 +315,7 @@ def episode2():
 
 
 #cutscene1()
-#episode1()
+episode1()
 
 
 
