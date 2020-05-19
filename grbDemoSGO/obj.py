@@ -191,6 +191,7 @@ class GameHandler(EventHandler):
         return self.EnemiesList
 
     def custom_event_use(self):
+        global gamemode
         self.playerShip.every_frame_event()
         #print("eveyrframe")
         for objects in self.EnemiesList:
@@ -239,6 +240,7 @@ class GameHandler(EventHandler):
 
         if self.playerShip.hp <= 0:
             grb.gamemode = "gameover"
+            print("game!")
             
     def remove(self, object__):
         if object__ in self.EnemiesList:

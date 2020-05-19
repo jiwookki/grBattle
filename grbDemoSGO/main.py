@@ -169,10 +169,12 @@ def showGameOverText():
     mainGameOver = Text("Game Over", hugfont, [255, 100, 100], 350, 200)
     gameOverSubTitle = Text("Your ship was destroyed", bigfont, [255, 255, 102], 320, 250)
     returnInstructions = Text("[B] Back to Episode Menu", medfont, [200, 255, 200], 200, 600)
-
+def backToEpisodes():
+    global gamemode
+    grb.gamemode = "story_selection_load"
 def DetectKeyPressesGameOver():
     global modeGameOverEvent
-    backEpisode - KeyUser(pygame.K_b, modeGameOverEvent, )
+    backEpisode = KeyUser(pygame.K_b, modeGameOverEvent, backToEpisodes)
 
 
 while True:
@@ -270,6 +272,9 @@ while True:
     elif grb.gamemode == "gameover":
         modeGameOverEvent = EventHandler()
         showGameOverText()
+        DetectKeyPressesGameOver()
+        modeGameOverEvent.key_event_use()
+        pygame.display.flip()
     else:
         print("invalid gamemode")
         sys.exit()

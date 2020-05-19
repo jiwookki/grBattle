@@ -85,6 +85,7 @@ class TinyFastEnemy():
     def bullet_incoming(self, x, y):
         if random.randint(0, 2) == 1:
             self.directionRefreshCounter = 15
+        self.normal_AI([x, y])
 
 
 
@@ -315,7 +316,7 @@ def episode2():
 
 
 #cutscene1()
-episode1()
+#episode1()
 
 
 
