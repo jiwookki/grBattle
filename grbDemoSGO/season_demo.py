@@ -1,4 +1,4 @@
-import pygame, grb, random
+import pygame, grb, random, time
 
 from obj import *
 
@@ -300,9 +300,13 @@ def episode1():
         grb.gameClock.tick(30)
         if grb.gamemode == "gameover":
             pygame.mixer.quit()
-            pygame.mixer.init(frequency=44100)
-            dstr = Sound("destroyed.wav", grb.sfxchannel)
-            dstr.play()
+            pygame.mixer.init(frequency=48000)
+            dstr = Sound("damaged.wav", grb.sfxchannel)
+            bom = Sound("BlasterShoot.wav", grb.musicchannel)
+            for x in range(0, 9):
+                dstr.play()
+                bom.play()
+                time.sleep(0.1)
             
             break
 
