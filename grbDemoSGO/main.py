@@ -1,7 +1,7 @@
  
 print("Launching Gamma Ray Battle Demo")
 
-import pygame, grb, platform, time, season_demo, sys
+import pygame, grb, platform, time, season_demo, sys, webbrowser
 from obj import *
 print(str(grb.gamemode))
 try:
@@ -139,12 +139,20 @@ def CopySiteLink():
         selectxp.play()
         infoOn = True
         if platform.platform().find('Darwin') == -1:
-            exec('pygame.scrap.put(pygame.SCRAP_TEXT, b"https://www.sites.google.com/view/swordfishgames/home")')
+            exec('pygame.scrap.put(pygame.SCRAP_TEXT, b"https://swordfishgamescont.wixsite.com/sword-fish-games")')
             showInfoBoard([Text("The link has been copied to the clipboard", medfont, [255, 255, 255], 350, 300)], 250, 100)
             storySelector.centerval = 0
         else:
             showInfoBoard([Text("Sorry, link copying is not available for Mac.", medfont, [255, 255, 255], 350, 250), Text("the pygame framework on Mac ", medfont, [255, 255, 255], 350, 300), Text("doesn't seem to support copying.", medfont, [255, 255, 255], 350, 340)], 250, 100)
             storySelector.centerval = 0
+def openSite():
+
+    global storySelector, selectxp
+    if storySelector.get_selected() == 2:
+        selectxp.play()
+        infoOn = True
+        webbrowser.open("https://swordfishgamescont.wixsite.com/sword-fish-games")
+        storySelector.centerval = 0
 
 def OpenEpisode():
     global storySelector, selected, gamemode
@@ -165,6 +173,7 @@ def DetectKeyPressesStorySel():
     backMenu = KeyUser(pygame.K_b, modeStorySlctEvent, OpenMenu)
     siteOpen = KeyUser(pygame.K_c, modeStorySlctEvent, CopySiteLink)
     useEpisode = KeyUser(pygame.K_s, modeStorySlctEvent, OpenEpisode)
+    siteDirOpen = KeyUser(pygame.K_o, modeStorySlctEvent, openSite)
 def showGameOverText():
     mainGameOver = Text("Game Over", hugfont, [255, 100, 100], 350, 200)
     gameOverSubTitle = Text("Your ship was destroyed", bigfont, [255, 255, 102], 320, 250)
@@ -252,7 +261,7 @@ while True:
         episodeList = [
         BigText(["A lead pilot finds himself stranded on a barren and desolate planet, ", "with little hope of escape or survival."], bigfont, [200, 255, 255], 175, 200, 30, True, hugfont, [255, 255, 255], heading=u"Episode 1: Gamma Mania"), 
         BigText(["The pilot finds his home star system destroyed, ", "every last man clamoring to grab the ruins of the blast. "], bigfont, [200, 255, 255], 175, 200, 30, True, hugfont, [255, 255, 255], heading=u"Episode 2: G-Blast"), 
-        BigText(["This is the demo version of Gamma Ray Battle.", "so keep an eye out for the full version at ", "[ https://www.sites.google.com/view/swordfishgames/home ]!", "[C] Copy Link To Clipboard"], bigfont, [200, 255, 255], 175, 200, 30, True, hugfont, [255, 255, 255], heading=u"More episodes coming soon!")]
+        BigText(["This is the demo version of Gamma Ray Battle.", "so keep an eye out for the full version at ", "[https://swordfishgamescont.wixsite.com/sword-fish-games]!", "[C] Copy Link To Clipboard", "[O] Open link directly in web browser"], bigfont, [200, 255, 255], 175, 200, 30, True, hugfont, [255, 255, 255], heading=u"More episodes coming soon!")]
         storySelector = Selector(pygame.K_DOWN, pygame.K_UP, modeStorySlctEvent, episodeList)
         storySlctMusic.multiplay(-1)
         grb.gamemode = "story_selection"

@@ -14,7 +14,7 @@ BULLETIMPACT = "bullet_hit"
 ttlIcon = pygame.image.load("scrIcon.PNG")
 print("screen init")
 pygame.display.set_icon(ttlIcon)
-screen = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN)
+screen = pygame.display.set_mode((1280, 720))
 try:
     pygame.scrap.init()
     print("pygame scrap init")
