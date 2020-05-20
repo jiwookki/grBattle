@@ -299,6 +299,11 @@ def episode1():
         pygame.display.flip()
         grb.gameClock.tick(30)
         if grb.gamemode == "gameover":
+            pygame.mixer.quit()
+            pygame.mixer.init(frequency=44100)
+            dstr = Sound("destroyed.wav", grb.sfxchannel)
+            dstr.play()
+            
             break
 
 

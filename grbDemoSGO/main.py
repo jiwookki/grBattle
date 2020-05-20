@@ -270,6 +270,7 @@ while True:
         print("episode 1 mode")
         season_demo.episode1()
     elif grb.gamemode == "gameover":
+        screen.fill((0, 0, 0))
         modeGameOverEvent = EventHandler()
         showGameOverText()
         DetectKeyPressesGameOver()
