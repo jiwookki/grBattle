@@ -202,12 +202,14 @@ def cutscene1():
                 if fastCutscene == False:
                     print("animating")
                     currentcutText.animate_blit()
+                    time.sleep(0.07)
+                    modeCut1Event.key_event_use()
+                    pygame.display.flip()
                 else:
                     break
                     print("cheese")
 
-            modeCut1Event.key_event_use()
-            pygame.display.flip()
+
         if fastCutscene == False:
             if fastCutscene == False:
                 for wait in range(0, 35):
