@@ -130,22 +130,22 @@ class SmallLongShooter():
         else:
             self.dirMode = 1
 
-        if bool(checkInBoundsY(self.y)) == True:
-            self.y = checkInBoundsY(self.y)
 
     def player_movement(self, player_pos):
         self.normal_AI(player_pos)
     def take_damage(self, knockback, damage):
         self.hELTH -= damage
-        self.y -= knockback + knockback / 2
+        self.knock = True
     def get_destroyed(self, player_coor):
         print("destroyed")
         if self.living == False:
             self.living = False
         self.gamehandler.remove(self)
     def collision_player(self, player_coor):
-        self.knock = True
-        self.hELTH - 25
+        self.knock = random.randint(0, 3)
+        self.hELTH -= 6.25
+        self.y -= 64
+        print(self.hELTH)
     def every_frame_event(self):
         if random.randint(0, 25) == 13:
             self.gun.shoot()
@@ -153,11 +153,30 @@ class SmallLongShooter():
         grb.screen.blit(self.sprite, [self.x, self.y])
         self.hitbox = pygame.Rect(self.x, self.y, self.size_x, self.size_y)
         self.bulletlist = self.gun.get_bullets()
-        if self.amtKnock < 11 and self.knock:
-            self.y -= 8
-        elif amtKnock >= 11:
+        if self.amtKnock < 11 and self.knock == 0:
+            self.y -= 24
+            self.x += 16
+            self.amtKnock += 1
+        elif self.amtKnock < 11 and self.knock == 1:
+            self.y += 24
+            self.x += 16
+            self.amtKnock += 1
+        elif self.amtKnock < 11 and self.knock == 2:
+            self.y -= 24
+            self.x -= 16
+            self.amtKnock += 1
+        elif self.amtKnock < 11 and self.knock == 3:
+            self.y += 24
+            self.x - 16
+            self.amtKnock += 1
+        elif self.amtKnock >= 11:
             self.knock = False
             self.amtKnock = 0
+        if bool(checkInBoundsY(self.y)) == True:
+            self.y = checkInBoundsY(self.y)
+        if bool(checkInBoundsX(self.x)):
+            self.x = checkInBoundsX(self.x)
+
     def bullet_incoming(self, bx, by):
         if self.x > bx:
             self.x -= random.randint(1, 15)
