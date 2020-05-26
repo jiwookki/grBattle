@@ -108,28 +108,30 @@ class SmallLongShooter():
         self.gamehandler.add_custom_user(self)
         self.gun = Gun("smallLongBullet.png", [self.x, self.y, projbox[0], projbox[1]], "down", 8, 4, self, [self.x, self.y], 20, 10, 0, False, None, None, None, 60, 1)
         self.dirMode = 0
+
     def normal_AI(self, player_pos):
         if self.dirMode >= 0 and self.dirMode <= 24:
-            if self.x >= player_pos[0]:
-                print("x>")
+            if self.x > player_pos[0]:
                 self.x -= random.randint(5, 17)
+                print("x>")
             elif self.x < player_pos[0]:
+                print("x<no")
                 self.x += random.randint(5, 17)
-                print("x<")
-            if self.y < player_pos[1] + 200:
-                self.y += random.randint(3, 12)
+
+
+
+
+
+            if self.y < player_pos[1] - 500:
+                self.y += random.randint(0, 12)
                 print("ranged")
-            elif self.y >= player_pos[1] + 200:
+            elif self.y >= player_pos[1] - 500:
                 self.y -= random.randint(0, 8)
                 print("unranged")
-            self.dirMode += 1
-        elif self.dirMode >= 28 and self.dirMode <= 34:
-            self.x += random.randint(-17, 17)
-            self.y += random.randint(-3, 3)
+
             self.dirMode += 1
         else:
-            self.dirMode = 1
-
+            self.dirMode = 0
 
     def player_movement(self, player_pos):
         self.normal_AI(player_pos)
@@ -148,26 +150,28 @@ class SmallLongShooter():
         print(self.hELTH)
     def every_frame_event(self):
         if random.randint(0, 25) == 13:
-            self.gun.shoot()
+            self.gun.shoot()             
         self.gun.every_frame_event()
         grb.screen.blit(self.sprite, [self.x, self.y])
         self.hitbox = pygame.Rect(self.x, self.y, self.size_x, self.size_y)
         self.bulletlist = self.gun.get_bullets()
-        if self.amtKnock < 11 and self.knock == 0:
+        if self.amtKnock < 11 and self.amtKnock > 0 and self.knock == 0:
             self.y -= 24
-            self.x += 16
+            self.x += 24
+            print("kn")
             self.amtKnock += 1
         elif self.amtKnock < 11 and self.knock == 1:
             self.y += 24
-            self.x += 16
+            self.x += 24
+            print("kn")
             self.amtKnock += 1
         elif self.amtKnock < 11 and self.knock == 2:
             self.y -= 24
-            self.x -= 16
+            self.x -= 24
             self.amtKnock += 1
         elif self.amtKnock < 11 and self.knock == 3:
             self.y += 24
-            self.x - 16
+            self.x -= 24
             self.amtKnock += 1
         elif self.amtKnock >= 11:
             self.knock = False
@@ -178,10 +182,11 @@ class SmallLongShooter():
             self.x = checkInBoundsX(self.x)
 
     def bullet_incoming(self, bx, by):
+        print("beee")
         if self.x > bx:
             self.x -= random.randint(1, 15)
         elif self.x < bx:
-            self.x += random.randint(1, 15)
+            self.x += random.randint(1, 15) 
         else:
             self.x += random.randint(-13, 15)
 
@@ -221,7 +226,7 @@ def cutscene1():
                 if fastCutscene == False:
                     print("animating")
                     currentcutText.animate_blit()
-                    time.sleep(0.07)
+                    time.sleep(0.06)
                     modeCut1Event.key_event_use()
                     pygame.display.flip()
                 else:
@@ -279,7 +284,7 @@ def spawnEnemyRoutines():
             print("wavemode3")
     elif waveMode == 3:
         for x in range(0, 2):
-            newEnemy = SmallLongShooter("smalllongshoot.png", random.randint(130, 700), 620, "smallLongBullet.png", 66, 72, modeEpi1Event, [32, 32])
+            newEnemy = SmallLongShooter("smalllongshoot.png", random.randint(0, 300), 620, "smallLongBullet.png", 66, 72, modeEpi1Event, [32, 32])
         for x in range(0, 3):
             newEnemy = TinyFastEnemy("tinyfast-ep1.png", random.randint(310, 620), 60, None, 64, 64, modeEpi1Event)
         waveMode = 4
@@ -292,13 +297,13 @@ def episode1():
     global scrollVar, subScrollVar, playerShip, waveMode, waveFrameCounter, modeEpi1Event
     scrollVar = 720
     subScrollVar = 0
-    waveMode = 0
+    waveMode = 3
     waveFrameCounter = 0
     pygame.mixer.quit()
     pygame.mixer.init(frequency=44100)
         
     modeEpi1Event = GameHandler()
-    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_l], "delta1.GIF", modeEpi1Event, 6, 600, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 20, 8, 14, 50, 12, 60, False, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav", "damaged.wav", 4000, 1)
+    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_l], "delta1.GIF", modeEpi1Event, 6, 150, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 20, 8, 14, 50, 12, 60, False, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav", "damaged.wav", 4000, 1)
     playerHPBar = HPBar("ship-hp-bar.PNG", playerShip.get_hp(), 500, 770, 100, [50, 255, 100], 50, 70)
     epi1Music = Sound("Episode1Music.ogg", grb.musicchannel)
     epi1Music.multiplay(-1)
@@ -316,7 +321,7 @@ def episode1():
         playerHPBar.update_hp(playerShip.get_hp())
         modeEpi1Event.custom_event_use()  
         spawnEnemyRoutines()
-        playerShip.blit()
+        playerShip.blit() 
         pygame.display.flip()
         grb.gameClock.tick(30)
         if grb.gamemode == "gameover":
@@ -346,7 +351,7 @@ def episode2():
 
 
 #cutscene1()
-#episode1()
+episode1()
 
 
 
