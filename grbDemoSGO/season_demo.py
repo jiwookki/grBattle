@@ -3,31 +3,33 @@ import pygame, grb, random, time
 from obj import *
 
 # homing bullet AI: (self position minus target position) divided by speed. the higher the dividend, the slower the speed.
-
-
-
-
-class TinyFastEnemy():
-    def __init__(self, sprite, x, y, projsprite, sx, sy, gamehandler):
-        self.hELTH = 35
+class Enemy():
+    def __init__(self, sprite, x, y, sx, sy, gamehandler):
         self.sprite = pygame.image.load(sprite)
         self.x = x
         self.y = y
         self.sx = sx
         self.sy = sy
+        self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
+        self.living = True
+        self.friendly = False
+        self.bulletlist = []
+        self.gamehandler = gamehandler
+        self.gamehandler.add_custom_user(self)
+
+
+
+class TinyFastEnemy(Enemy):
+    def __init__(self, sprite, x, y, projsprite, sx, sy, gamehandler):
+        super().__init__(sprite, x, y, sx, sy, gamehandler)
+        self.hELTH = 35
         print(self.x)
         print(self.y)
         print(self.sx)
         print(self.sy)
         self.directionRefreshCounter = 0
         self.currentDirection = random.randint(0, 3)
-        self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
-        self.living = True
-        self.friendly = False
         self.damage = 35
-        self.bulletlist = []
-        self.gamehandler = gamehandler
-        self.gamehandler.add_custom_user(self)
     def move_self(self, moved_x, moved_y):
         oldx = self.x
         oldy = self.y
@@ -89,19 +91,12 @@ class TinyFastEnemy():
 
 
 
-class SmallLongShooter():
+class SmallLongShooter(Enemy):
     def __init__(self, sprite, x, y, projsprite, sx, sy, gamehandler, projbox):
-        self.x = x
-        self.y = y
-        self.size_x = sx
-        self.size_y = sy
-        self.hitbox = pygame.Rect(self.x, self.y, self.size_x, self.size_y)
-        self.sprite = pygame.image.load(sprite)
+        super().__init__(sprite, x, y, sx, sy, gamehandler)
         self.hELTH = 50
         self.damage = 30
         self.bulletlist = []
-        self.living = False
-        self.friendly = False
         self.knock = True
         self.amtKnock = 0
         self.gamehandler = gamehandler
@@ -153,7 +148,7 @@ class SmallLongShooter():
             self.gun.shoot()             
         self.gun.every_frame_event()
         grb.screen.blit(self.sprite, [self.x, self.y])
-        self.hitbox = pygame.Rect(self.x, self.y, self.size_x, self.size_y)
+        self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
         self.bulletlist = self.gun.get_bullets()
         if self.amtKnock < 11 and self.amtKnock > 0 and self.knock == 0:
             self.y -= 24
@@ -323,7 +318,7 @@ def episode1():
         spawnEnemyRoutines()
         playerShip.blit() 
         pygame.display.flip()
-        grb.gameClock.tick(30)
+        grb.gameClock.tick(60)
         if grb.gamemode == "gameover":
             pygame.mixer.quit()
             pygame.mixer.init(frequency=48000)
@@ -351,7 +346,7 @@ def episode2():
 
 
 #cutscene1()
-episode1()
+#episode1()
 
 
 

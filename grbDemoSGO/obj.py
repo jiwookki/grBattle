@@ -304,9 +304,9 @@ class Ship(GameObject):
         self.x = x
         self.y = y
         self.sprite = pygame.image.load(filename)
-        self.size_x = sizex
-        self.size_y = sizey
-        self.hitbox = pygame.Rect(self.x, self.y, self.size_x, self.size_y)
+        self.sx = sizex
+        self.sy = sizey
+        self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
         self.keyup = keylist[0]
         self.keydown = keylist[1]
         self.keyleft = keylist[2]
@@ -374,7 +374,7 @@ class Ship(GameObject):
             self.y += self.dy
 
         self.gun.every_frame_event()
-        self.hitbox = pygame.Rect(self.x, self.y, self.size_x, self.size_y)
+        self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
 
 
     def shoot(self):
@@ -402,9 +402,9 @@ class Bullet(GameObject):
         self.sprite = pygame.image.load(sprite)
         self.x = x
         self.y = y
-        self.size_x = sizex
-        self.size_y = sizey
-        self.hitbox = pygame.Rect(self.x, self.y, self.size_x, self.size_y)
+        self.sx = sizex
+        self.sy = sizey
+        self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
         self.direction = horizOrVerti
         self.gun = gunparent
         self.shootcounter = 0
@@ -431,7 +431,7 @@ class Bullet(GameObject):
                 self.x += CalPixelSpeed(self.gun.speed)
             else:
                 raise ValueError("Custom error: ship's direction (horizOrVerti) var set to wrong value")
-            self.hitbox = pygame.Rect(self.x, self.y, self.size_x, self.size_y)
+            self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
             grb.screen.blit(self.sprite, [self.x, self.y])
         else:
             self.destroy()
@@ -477,7 +477,7 @@ class Gun():
             newbullet = Bullet(self.bulletsprite, self.bulletRectPara[0], self.bulletRectPara[1], self.direction, self.bulletRectPara[2], self.bulletRectPara[3], self, self.numPierce)
             if bool(self.shootsound) == True:
                 self.shootsound.play()
-            newbullet.change_pos(self.parentship.x + self.parentship.size_x / 3, self.parentship.y)
+            newbullet.change_pos(self.parentship.x + self.parentship.sx / 3, self.parentship.y)
             self.magVar -= 1
             self.bulletlist.append(newbullet)
             newbullet.go_fire()
