@@ -2,6 +2,38 @@ import pygame, grb, random, time
 
 from obj import *
 
+class StrayProjectile():
+    def __init__(self, sprite, x, y, sx, sy, damage, handler, dstrSound, speed):
+        self.sprite = pygame.image.load(sprite)
+        self.x = x
+        self.y = y
+        self.sx = sx
+        self.sy = sy
+        self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
+        self.living = True
+        self.friendly = False
+        self.gamehandler = handler
+        self.gamehandler.add_custom_user(self)
+        self.damage = damage
+        self.dstr_sound = Sound(dstrSound, grb.sfxchannel)
+        self.speed = speed
+    def collision_player(self, player_coor):
+        self.dstr_sound.play()
+        self.get_destroyed()
+    def get_destroyed(self, player_coor):
+        self.living = False
+        self.gamehandler.remove(self)
+    def every_frame_event(self, player_coor):
+        self.y -= CalPixelSpeed(self.speed)
+    def revive(self, x, y):
+        self.x = x
+        self.y = y
+        self.gamehandler.add_custom_user(self)
+
+
+
+
+
 # homing bullet AI: (self position minus target position) divided by speed. the higher the dividend, the slower the speed.
 class Enemy():
     def __init__(self, sprite, x, y, sx, sy, gamehandler):
@@ -261,7 +293,7 @@ def drawScrollingBackground():
 
 def spawnEnemyRoutines():
     global waveMode, waveFrameCounter, modeEpi1Event
-
+    
     if waveMode == 0:
         waveFrameCounter += 1
         if waveFrameCounter == 150:
