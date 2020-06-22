@@ -3,7 +3,7 @@ import pygame, grb, random, time
 from obj import *
 
 class StrayProjectile():
-    def __init__(self, sprite, x, y, sx, sy, damage, handler, dstrSound, speed):
+    def __init__(self, sprite, x, y, sx, sy, damage, handler, dstrSound, xspeed, yspeed):
         self.sprite = pygame.image.load(sprite)
         self.x = x
         self.y = y
@@ -16,7 +16,9 @@ class StrayProjectile():
         self.gamehandler.add_custom_user(self)
         self.damage = damage
         self.dstr_sound = Sound(dstrSound, grb.sfxchannel)
-        self.speed = speed
+        self.x_speed = xspeed
+        self.y_speed = yspeed
+
     def collision_player(self, player_coor):
         self.dstr_sound.play()
         self.get_destroyed()
@@ -24,7 +26,8 @@ class StrayProjectile():
         self.living = False
         self.gamehandler.remove(self)
     def every_frame_event(self, player_coor):
-        self.y -= CalPixelSpeed(self.speed)
+        self.y += CalPixelSpeed(self.y_speed)
+        self.x += CalPixelSpeed(self.x_speed)
     def revive(self, x, y):
         self.x = x
         self.y = y
