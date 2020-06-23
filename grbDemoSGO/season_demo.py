@@ -221,6 +221,24 @@ class SmallLongShooter(Enemy):
             self.x += random.randint(-13, 15)
 
 
+
+
+
+def showFPSCount():
+    global fpscounter
+    if grb.fpscounter:
+        fpsShower = Text("Avg. FPS: " + str(int(grb.gameClock.get_fps())), grb.bigfont, [255, 255, 255], 1200, 200)
+
+
+
+
+
+
+
+
+
+
+
 def delayCutsceneFrame():
     global fastCutscene
     fastCutscene = True
@@ -348,6 +366,7 @@ def episode1():
         drawScrollingBackground()
         ammoDisp = Text("Ammo Left: " + str(playerShip.gun.get_ammo_left()), grb.medfont, [255, 255, 255], 800, 350)
         coolDownDisp = Text("Cooling Down: " + str(playerShip.gun.coolbool), grb.medfont, [200, 255, 255], 800, 415)
+        showFPSCount()
         playerHPBar.update_hp(playerShip.get_hp())
         modeEpi1Event.custom_event_use()  
         spawnEnemyRoutines()

@@ -162,7 +162,7 @@ class EventHandler():
     def key_event_use(self):
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-                if event.key  == pygame.K_ESCAPE:
+                if event.key  == pygame.K_DELETE:
                     sys.exit()
                 for objects in self.keyobjectslist:
                     objects.use_down_event(event)
@@ -198,7 +198,7 @@ class GameHandler(EventHandler):
             objects.every_frame_event()
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-                if event.key  == pygame.K_ESCAPE:
+                if event.key  == pygame.K_DELETE:
                     sys.exit()
                 for objects in self.keyobjectslist:
                     objects.use_down_event(event)

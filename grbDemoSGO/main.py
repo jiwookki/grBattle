@@ -3,6 +3,7 @@ print("Launching Gamma Ray Battle Demo")
 
 import pygame, grb, platform, time, season_demo, sys, webbrowser
 from obj import *
+
 print(str(grb.gamemode))
 try:
     from arcade import *
@@ -53,16 +54,20 @@ def MakeTextOptions():
     backtotitle = Text("[B] Back To Title Screen", medfont, [255, 255, 255], 50, 650)
 def ShowSettings():
     print ("settings show")
+    if fpscounter:
+        fpsColor = [155, 255, 155]
+    else:
+        fpsColor = [255, 155, 155]
     TitleSettings = Text("Settings", hugfont, [255, 255, 255], 500, 50)
     #volTitle = Text("Volume Controls", bigfont, [255, 255, 255], 150, 100)
     #volUpShow = Text("Up Arrow Key: Volume Up", medfont, [150, 255, 150], 150, 140)
     #volDownShow = Text("Down Arrow Key: Volume Down", medfont, [255, 150, 150], 150, 240)
     backtomenu = Text("[B] Back To Menu", medfont, [255, 255, 180], 700, 50)
     #volumeShow = Text("Volume: [" + str(int(grb.sfxvolume * 10)) + "] 0 - 10", medfont, [200, 200, 255], 250, 190)
-    screensubttl = Text("Screen Controls", bigfont, [255, 255, 200], 700, 150)
-    screenChangeInstructions = Text("[TAB] Toggle Screen Size", medfont, [200, 200, 200], 650, 190)
-    screenChangeSubtitleIn = Text("Toggle Between 720p Windowed and 720p Fullscreen", smlfont, [200, 200, 200], 615, 210)
-
+    screensubttl = Text("Screen Controls", bigfont, [255, 255, 200], 200, 150)
+    screenChangeInstructions = Text("[TAB] Toggle Screen Size", medfont, [200, 200, 200], 150, 190)
+    screenChangeSubtitleIn = Text("Toggle Between 720p Windowed and 720p Fullscreen", smlfont, [200, 200, 200], 115, 210)
+    fpsToggleText = Text("[F] Toggle FPS Counter (only active during gameplay)", bigfont, fpsColor, 200, 400)
 def SetToSettingMode():
     global gamemode
     global menumusic
@@ -71,6 +76,13 @@ def SetToSettingMode():
     selected.play()
     grb.gamemode = "settings"
     print ("set to setting mode")
+
+def ToggleFPSCounter():
+    global fpscounter
+    if fpscounter:
+        fpscounter = False
+    else:
+        fpscounter = True
 
 def TurnUpVol():
     global sfxvolume
@@ -123,6 +135,8 @@ def DetectKeyPressesSettings():
     backToMain = KeyUser(pygame.K_b, modeSettingsEvent, OpenMenu)
     keyVolUp = KeyUser(pygame.K_UP, modeSettingsEvent, TurnUpVol)
     keyVolDown = KeyUser(pygame.K_DOWN, modeSettingsEvent, TurnDownVol)
+    toggleFPSCount = KeyUser(pygame.K_f, modeSettingsEvent, ToggleFPSCounter)
+
     toggleScreenFull = KeyUser(pygame.K_TAB, modeSettingsEvent, ChangeScreenMode)
     
 def DrawStorySelectText():
@@ -185,6 +199,9 @@ def DetectKeyPressesGameOver():
     global modeGameOverEvent
     backEpisode = KeyUser(pygame.K_b, modeGameOverEvent, backToEpisodes)
 
+for x in range(0, 10):
+    grb.gameClock.tick_busy_loop(30)
+
 
 while True:
     if grb.gamemode == 1:
@@ -199,7 +216,7 @@ while True:
         tooptions = KeyUser(None, mode1Event, OpenMenuStart)
         startLogo = Object("logo.PNG", 25, -25)
         prsToStart = Text("Press Any Key To Start", hugfont, [200, 255, 200], 425, 500)
-        prsToQuit = Text("Press ESC to quit game", medfont, [255, 200, 100], 425, 550)
+        prsToQuit = Text("Press DEL to quit game", medfont, [255, 200, 100], 425, 550)
         cpyright = Text("Copyright © 2019-2020 Swordfish Software. All Rights Reserved.", smlfont, [255, 255, 255], 450, 700)
         mode1Event.key_event_use()
         pygame.display.flip()

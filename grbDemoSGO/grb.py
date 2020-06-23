@@ -53,7 +53,19 @@ class PlayerMovement(CustomBlankEvent):
 class BulletHit():
     def __init__(self, bulletRect):
         self.type = BULLETHIT
-screenmodevar = "fullscreen"
+
+
+
+
+
+
+screenmodevar = "window"
+fpscounter = False
+
+
+
+
+
 # global variables
 def ChangeScreenMode():
     global screen
