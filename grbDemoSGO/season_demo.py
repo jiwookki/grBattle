@@ -227,7 +227,8 @@ class SmallLongShooter(Enemy):
 def showFPSCount():
     global fpscounter
     if grb.fpscounter:
-        fpsShower = Text("Avg. FPS: " + str(int(grb.gameClock.get_fps())), grb.bigfont, [255, 255, 255], 1200, 200)
+        fpsShower = Text("Avg. FPS: " + str(int(grb.gameClock.get_fps())), grb.bigfont, [255, 255, 255], 1050, 20)
+        print("fps on")
 
 
 

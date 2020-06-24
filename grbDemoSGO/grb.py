@@ -81,8 +81,8 @@ bigfont = pygame.font.Font("VT323-Regular.ttf", 35)
 medfont = pygame.font.Font("VT323-Regular.ttf", 25)
 smlfont = pygame.font.Font("VT323-Regular.ttf", 15)
 
-sfxvolume = 0.5
-musicvolume = 0.5
+sfxvolume = 0
+musicvolume = 0
 
 musicchannel = pygame.mixer.Channel(0)
 sfxchannel = pygame.mixer.Channel(1)

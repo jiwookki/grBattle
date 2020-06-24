@@ -54,7 +54,7 @@ def MakeTextOptions():
     backtotitle = Text("[B] Back To Title Screen", medfont, [255, 255, 255], 50, 650)
 def ShowSettings():
     print ("settings show")
-    if fpscounter:
+    if grb.fpscounter:
         fpsColor = [155, 255, 155]
     else:
         fpsColor = [255, 155, 155]
@@ -79,10 +79,10 @@ def SetToSettingMode():
 
 def ToggleFPSCounter():
     global fpscounter
-    if fpscounter:
-        fpscounter = False
+    if grb.fpscounter:
+        grb.fpscounter = False
     else:
-        fpscounter = True
+        grb.fpscounter = True
 
 def TurnUpVol():
     global sfxvolume
