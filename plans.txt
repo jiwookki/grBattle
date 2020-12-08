@@ -29,7 +29,7 @@ Large cannon-type gun, low ROF (abt 1 fer 1.4 seconds), non-auto, damage about 5
 Enemy Types
 Tinyfast Enemy: 35HP, 14-32 ppf, melee attack, dmg = 35
 SmallDistancedShooter: 50HP, 8-20ppf, long-range attack,  doesn't go near player, similar x pos but far away y pos, dmg = 60
-SlowTank: 350HP, 5-15 ppf, 5-shot bullets, very slow, goes toward player, large, extra damage when bump into player and explosion
+SlowTank: 250HP, 5-15 ppc, 5-shot bullets, very slow, goes toward player, large, extra damage when bump into player and explosion
 AsteroidLauncher: 60HP, 7-18ppf, asteroid launch, launches slow-moving asteroids, dmg = 80
 
 
@@ -40,7 +40,7 @@ Story
 
 Character
     Profile
-        Name: NoreGamma/Nore ve Gamma/Noregam
+        Name: 
 
 
 Season 1 (12 Episodes?)
@@ -59,7 +59,7 @@ Season 1 (12 Episodes?)
             Ship in atmosphere of planet Krenthos
 
             Dialogue: Comms "H-Hello? Is anyone recieving this?", glitching, low signal strength
-            Dialogue: Comms "This is Commander Noregam, requesting as-*krzzt*-cation data at coordinates N13-*krzzzt*, squadron Del-*krzzzzzzzzzzzzzzzt*-now." low signal strength
+            Dialogue: Comms "This is Commander , requesting as-*krzzt*-cation data at coordinates N13-*krzzzt*, squadron Del-*krzzzzzzzzzzzzzzzt*-now." low signal strength
             Dialogue: "They'll come. For now, all I have to do is survive..."
 
             Tutorial

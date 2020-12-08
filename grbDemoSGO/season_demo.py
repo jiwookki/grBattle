@@ -221,6 +221,59 @@ class SmallLongShooter(Enemy):
             self.x += random.randint(-13, 15)
 
 
+class SlowTank(Enemy):
+    def __init__(self, sprite, x, y, projsprite, sx, sy, gamehandler):
+        self.hELTH = 250
+        self.damage = 35
+        self.bulletlist = []
+        self.x = x
+        self.y = y
+        self.sx = sx
+        self.sy = sy
+        self.directionRefreshCounter = 0
+        self.currentDirection = 0
+        self.gunFiring = False
+        self.gunFiringCounter = 0
+        self.gunFiringCooldown = 0
+        self.hitbox = pygame.Rect(self.x, self.y, self.sx, self,sy)
+        self.gun = Gun(projsprite, [self.x, self.y, self.sx, self.sy], "down", 4, 30, self, [self.x, self.y], 130, 5, 360, True, None, None, 30, 1)
+    def normal_AI(self, player_coor):
+            if self.x > player_pos[0]:
+                self.x -= random.randint(3, 9)
+            elif self.x < player_pos[0]:
+                self.x += random.randint(3, 9)
+
+
+            if self.currentDirection == 0:
+                self.y += random.randint(2, 6)
+            elif self.currentDirection == 1:
+                self.y += random.randint(1, 3)
+            elif self.currentDirection == 2:
+                self.y -= random.randint(1, 3)
+    def every_frame_event(self):
+        if self.directionRefreshCounter == 120:
+            self.currentDirection = random.randint(0, 2)
+            self.directionRefreshCounter = 0
+        else:
+            self.directionRefreshCounter += 1
+
+
+
+
+        self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
+        grb.screen.blit(self.sprite, [self.x, self.y])
+        self.bulletlist = self.gun.get_bullets()
+
+
+
+
+
+
+
+
+
+
+
 
 
 
