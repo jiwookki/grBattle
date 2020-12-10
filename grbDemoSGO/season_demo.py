@@ -237,11 +237,60 @@ class SlowTank(Enemy):
         self.gunFiringCooldown = 0
         self.hitbox = pygame.Rect(self.x, self.y, self.sx, self,sy)
         self.gun = Gun(projsprite, [self.x, self.y, self.sx, self.sy], "down", 4, 30, self, [self.x, self.y], 130, 5, 360, True, None, None, 30, 1)
+        self.knock = False
+        self.amtKnock = 0
+        self.knockType = 0
     def normal_AI(self, player_coor):
             if self.x > player_pos[0]:
-                self.x -= random.randint(3, 9)
+                if self.currentDirection <= 1:
+                    self.x -= random.randint(3, 9)
+                else:
+                    self.x += random.randint(1, 4)
             elif self.x < player_pos[0]:
-                self.x += random.randint(3, 9)
+                if self.currentDirection <= 1:
+                    self.x += random.randint(3, 9)
+                else:
+                    self.x -= random.randint(1, 4)
+
+            self.y -= random.randint(0, 6)
+    def every_frame_event(self):
+        if self.directionRefreshCounter == 120:
+            self.currentDirection = random.randint(0, 2)
+            self.directionRefreshCounter = 0
+        else:
+            self.directionRefreshCounter += 1
+        if self.knock == True:
+            self.amtKnock += 1
+            if self.knockType == 0:
+                self.x += 10
+                self.y += 10
+            elif self.knockType == 1:
+                self.x -= 10
+                self.y += 10
+            if self.amtKnock == 45:
+                self.knock = False
+                self.amtKnock = 15
+
+    def collision_player(self, player_coor):
+        global playerShip
+        self.hELTH -= 16
+        self.knock = True
+        self.knockType = random.randint(0, 1)
+        playerShip.take_damage(random.randint(10, 25))
+    def take_damage(self, knockback, damage):
+        self.hELTH -= damage
+        self.knock = True
+        self.knockTypw = random.randint(0, 1)
+    def bullet_incoming(self, bx, by):
+        if self.x > bx:
+            self.x -= random.randint(3,9)
+        elif self.x <= bx:
+            self.x += random.randint(3, 9)
+    def player_movement(self, player_coor):
+        if self.x > player_pos[0]:
+                    self.x -= random.randint(3, 9)
+            elif self.x < player_pos[0]:
+                    self.x += random.randint(3, 9)
 
 
             if self.currentDirection == 0:
@@ -250,17 +299,16 @@ class SlowTank(Enemy):
                 self.y += random.randint(1, 3)
             elif self.currentDirection == 2:
                 self.y -= random.randint(1, 3)
-    def every_frame_event(self):
-        if self.directionRefreshCounter == 120:
-            self.currentDirection = random.randint(0, 2)
-            self.directionRefreshCounter = 0
-        else:
-            self.directionRefreshCounter += 1
+            
+
+
+
 
 
 
 
         self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
+        self.gun.every_frame_event()
         grb.screen.blit(self.sprite, [self.x, self.y])
         self.bulletlist = self.gun.get_bullets()
 
@@ -323,14 +371,14 @@ def cutscene1():
         if fastCutscene == False:
             cutsceneWait = 0
             for current_length in range(0, currentcutText.gtLen()):
-                delayAmountMeasurer = KeyUser(pygame.K_RETURN, modeCut1Event, delayCutsceneFrame)
+                delayAmountMeasurder = KeyUser(pygame.K_RETURN, modeCut1Event, delayCutsceneFrame)
                 grb.screen.fill((0, 0, 0))
                 if fastCutscene == False:
                     print("animating")
                     currentcutText.animate_blit()
                     time.sleep(0.06)
                     modeCut1Event.key_event_use()
-                    pygame.display.flip()
+                    pyganme.display.flip()
                 else:
                     break
                     print("cheese")
