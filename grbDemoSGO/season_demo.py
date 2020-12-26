@@ -308,6 +308,12 @@ class SlowTank(Enemy):
     def get_destroyed(self, player_coor):
         self.living = False
         self.gamehandler.remove(self)
+    def move_self(self, nx, ny):
+        oldx = self.x
+        oldy = self.y
+        self.x = oldx + nx
+        self.y = oldy + ny
+        return [self.x, self.y]
             
 
 
