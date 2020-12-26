@@ -240,6 +240,8 @@ class SlowTank(Enemy):
         self.knock = False
         self.amtKnock = 0
         self.knockType = 0
+        self.living = True
+        self.gamehandler = gamehandler
     def normal_AI(self, player_coor):
             if self.x > player_pos[0]:
                 if self.currentDirection <= 1:
@@ -270,17 +272,21 @@ class SlowTank(Enemy):
             if self.amtKnock == 45:
                 self.knock = False
                 self.amtKnock = 15
+        self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
+        self.gun.every_frame_event()
+        grb.screen.blit(self.sprite, [self.x, self.y])
+        self.bulletlist = self.gun.get_bullets()
 
     def collision_player(self, player_coor):
         global playerShip
-        self.hELTH -= 16
+        self.hELTH -= 50
         self.knock = True
         self.knockType = random.randint(0, 1)
         playerShip.take_damage(random.randint(10, 25))
     def take_damage(self, knockback, damage):
         self.hELTH -= damage
         self.knock = True
-        self.knockTypw = random.randint(0, 1)
+        self.knockType = random.randint(0, 1)
     def bullet_incoming(self, bx, by):
         if self.x > bx:
             self.x -= random.randint(3,9)
@@ -299,6 +305,9 @@ class SlowTank(Enemy):
                 self.y += random.randint(1, 3)
             elif self.currentDirection == 2:
                 self.y -= random.randint(1, 3)
+    def get_destroyed(self, player_coor):
+        self.living = False
+        self.gamehandler.remove(self)
             
 
 
@@ -307,10 +316,6 @@ class SlowTank(Enemy):
 
 
 
-        self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
-        self.gun.every_frame_event()
-        grb.screen.blit(self.sprite, [self.x, self.y])
-        self.bulletlist = self.gun.get_bullets()
 
 
 
