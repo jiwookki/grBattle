@@ -295,7 +295,7 @@ class SlowTank(Enemy):
     def player_movement(self, player_coor):
         if self.x > player_pos[0]:
                     self.x -= random.randint(3, 9)
-            elif self.x < player_pos[0]:
+        elif self.x < player_pos[0]:
                     self.x += random.randint(3, 9)
 
 
@@ -450,7 +450,7 @@ def spawnEnemyRoutines():
             newEnemy = TinyFastEnemy("tinyfast-ep1.png", random.randint(310, 620), 60, None, 64, 64, modeEpi1Event)
         waveMode = 4
     elif waveMove == 4:
-        newEnemy = SlowTank("")
+        newEnemy = SlowTank("slowtank-ep1.png", random.randint(310, 600), 60, "smallLongBullet.png", 96, 96, modeEpi1Event)
     elif waveMode == 5:
         if bool(modeEpi1Event.get_custom_objects()) == False:
             waveMode = 0
