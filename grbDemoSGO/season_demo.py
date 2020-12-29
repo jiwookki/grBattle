@@ -235,8 +235,8 @@ class SlowTank(Enemy):
         self.gunFiring = False
         self.gunFiringCounter = 0
         self.gunFiringCooldown = 0
-        self.hitbox = pygame.Rect(self.x, self.y, self.sx, self,sy)
-        self.gun = Gun(projsprite, [self.x, self.y, self.sx, self.sy], "down", 4, 30, self, [self.x, self.y], 130, 5, 360, True, None, None, 30, 1)
+        self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
+        self.gun = Gun(projsprite, [self.x, self.y, self.sx, self.sy], "down", 4, 30, self, [self.x, self.y], 130, 5, 360, True, None, None, None, 30, 1)
         self.knock = False
         self.amtKnock = 0
         self.knockType = 0
@@ -294,16 +294,16 @@ class SlowTank(Enemy):
             self.x += random.randint(3, 9)
     def player_movement(self, player_coor):
         if self.x > player_pos[0]:
-                    self.x -= random.randint(3, 9)
+            self.x -= random.randint(3, 9)
         elif self.x < player_pos[0]:
-                    self.x += random.randint(3, 9)
+            self.x += random.randint(3, 9)
 
 
-            if self.currentDirection == 0:
+        if self.currentDirection == 0:
                 self.y += random.randint(2, 6)
-            elif self.currentDirection == 1:
+        elif self.currentDirection == 1:
                 self.y += random.randint(1, 3)
-            elif self.currentDirection == 2:
+        elif self.currentDirection == 2:
                 self.y -= random.randint(1, 3)
     def get_destroyed(self, player_coor):
         self.living = False
@@ -389,7 +389,7 @@ def cutscene1():
                     currentcutText.animate_blit()
                     time.sleep(0.06)
                     modeCut1Event.key_event_use()
-                    pyganme.display.flip()
+                    pygame.display.flip()
                 else:
                     break
                     print("cheese")
@@ -449,7 +449,7 @@ def spawnEnemyRoutines():
         for x in range(0, 3):
             newEnemy = TinyFastEnemy("tinyfast-ep1.png", random.randint(310, 620), 60, None, 64, 64, modeEpi1Event)
         waveMode = 4
-    elif waveMove == 4:
+    elif waveMode == 4:
         newEnemy = SlowTank("slowtank-ep1.png", random.randint(310, 600), 60, "smallLongBullet.png", 96, 96, modeEpi1Event)
     elif waveMode == 5:
         if bool(modeEpi1Event.get_custom_objects()) == False:
