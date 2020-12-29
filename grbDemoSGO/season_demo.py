@@ -449,7 +449,9 @@ def spawnEnemyRoutines():
         for x in range(0, 3):
             newEnemy = TinyFastEnemy("tinyfast-ep1.png", random.randint(310, 620), 60, None, 64, 64, modeEpi1Event)
         waveMode = 4
-    elif waveMode == 4:
+    elif waveMove == 4:
+        newEnemy = SlowTank("")
+    elif waveMode == 5:
         if bool(modeEpi1Event.get_custom_objects()) == False:
             waveMode = 0
 
