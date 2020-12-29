@@ -25,7 +25,7 @@ def OpenMenuStart():
     print("grb.gamemode is 2.5")
 
 def OpenMenu(): 
-    print("opened menusFJsdjk sfjk nlj fdj ffvkgj d f")
+    print("opened menu")
     global gamemode
     global selected
     global menumusic                                                                                                  
