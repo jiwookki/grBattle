@@ -430,7 +430,7 @@ def spawnEnemyRoutines():
     
     if waveMode == 0:
         waveFrameCounter += 1
-        if waveFrameCounter == 150:
+        if waveFrameCounter == 1400:
             waveFrameCounter = 0
         waveMode = 1
         
@@ -460,7 +460,7 @@ def episode1():
     global scrollVar, subScrollVar, playerShip, waveMode, waveFrameCounter, modeEpi1Event
     scrollVar = 720
     subScrollVar = 0
-    waveMode = 3
+    waveMode = 0
     waveFrameCounter = 0
     pygame.mixer.quit()
     pygame.mixer.init(frequency=44100)
