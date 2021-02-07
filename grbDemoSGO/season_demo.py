@@ -265,6 +265,10 @@ class SlowTank(Enemy):
             if self.amtKnock == 45:
                 self.knock = False
                 self.amtKnock = 15
+        if bool(checkInBoundsY(self.y)) == True:
+            self.y = checkInBoundsY(self.y)
+        if bool(checkInBoundsX(self.x)):
+            self.x = checkInBoundsX(self.x)
         self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
         self.gun.every_frame_event()
         grb.screen.blit(self.sprite, [self.x, self.y])
