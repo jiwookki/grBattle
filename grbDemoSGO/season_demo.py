@@ -223,26 +223,19 @@ class SmallLongShooter(Enemy):
 
 class SlowTank(Enemy):
     def __init__(self, sprite, x, y, projsprite, sx, sy, gamehandler):
+        super().__init__(sprite, x, y, sx, sy, gamehandler)
         self.hELTH = 250
         self.damage = 35
-        self.bulletlist = []
-        self.x = x
-        self.y = y
-        self.sx = sx
-        self.sy = sy
         self.directionRefreshCounter = 0
         self.currentDirection = 0
         self.gunFiring = False
         self.gunFiringCounter = 0
         self.gunFiringCooldown = 0
-        self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
         self.gun = Gun(projsprite, [self.x, self.y, self.sx, self.sy], "down", 4, 30, self, [self.x, self.y], 130, 5, 360, True, None, None, None, 30, 1)
         self.knock = False
         self.amtKnock = 0
         self.knockType = 0
-        self.living = True
-        self.gamehandler = gamehandler
-    def normal_AI(self, player_coor):
+    def normal_AI(self, player_pos):
             if self.x > player_pos[0]:
                 if self.currentDirection <= 1:
                     self.x -= random.randint(3, 9)
@@ -277,7 +270,7 @@ class SlowTank(Enemy):
         grb.screen.blit(self.sprite, [self.x, self.y])
         self.bulletlist = self.gun.get_bullets()
 
-    def collision_player(self, player_coor):
+    def collision_player(self, player_pos):
         global playerShip
         self.hELTH -= 50
         self.knock = True
@@ -292,7 +285,7 @@ class SlowTank(Enemy):
             self.x -= random.randint(3,9)
         elif self.x <= bx:
             self.x += random.randint(3, 9)
-    def player_movement(self, player_coor):
+    def player_movement(self, player_pos):
         if self.x > player_pos[0]:
             self.x -= random.randint(3, 9)
         elif self.x < player_pos[0]:
@@ -305,7 +298,7 @@ class SlowTank(Enemy):
                 self.y += random.randint(1, 3)
         elif self.currentDirection == 2:
                 self.y -= random.randint(1, 3)
-    def get_destroyed(self, player_coor):
+    def get_destroyed(self, player_pos):
         self.living = False
         self.gamehandler.remove(self)
     def move_self(self, nx, ny):
@@ -497,7 +490,7 @@ def episode1():
         pygame.display.flip()
 
         grb.gameClock.tick(60)
-        
+
         if grb.gamemode == "gameover":
             pygame.mixer.quit()
             pygame.mixer.init(frequency=48000)
