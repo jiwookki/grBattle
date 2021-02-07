@@ -449,6 +449,7 @@ def spawnEnemyRoutines():
     elif waveMode == 5:
         for x in range(0, 2):
             newEnemy = SlowTank("slowtank-ep1.png", random.randint(310, 600), 60, "smallLongBullet.png", 96, 96, modeEpi1Event)
+        waveMode = 6
     elif waveMode == 6:
         if bool(modeEpi1Event.get_custom_objects()) == False:
             waveMode = 0
