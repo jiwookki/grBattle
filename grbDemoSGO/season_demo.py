@@ -478,16 +478,26 @@ def episode1():
         grb.gameClock.tick(24)
     while episode1On:
         grb.screen.fill((30, 30, 30))
+
         drawScrollingBackground()
+
         ammoDisp = Text("Ammo Left: " + str(playerShip.gun.get_ammo_left()), grb.medfont, [255, 255, 255], 800, 350)
         coolDownDisp = Text("Cooling Down: " + str(playerShip.gun.coolbool), grb.medfont, [200, 255, 255], 800, 415)
+
         showFPSCount()
+
         playerHPBar.update_hp(playerShip.get_hp())
+
         modeEpi1Event.custom_event_use()  
+
         spawnEnemyRoutines()
+
         playerShip.blit() 
+
         pygame.display.flip()
+
         grb.gameClock.tick(60)
+        
         if grb.gamemode == "gameover":
             pygame.mixer.quit()
             pygame.mixer.init(frequency=48000)
