@@ -235,23 +235,47 @@ class SlowTank(Enemy):
         self.knock = False
         self.amtKnock = 0
         self.knockType = 0
+        self.currentDistanceFromPlayerY = random.randint(-150, 150)
+        self.currentDistanceFromPlayerX = random.randint(-200, 200)
     def normal_AI(self, player_pos):
-            if self.x > player_pos[0]:
+
+
+            if self.x > player_pos[0] + self.currentDistanceFromPlayerX:
                 if self.currentDirection <= 1:
-                    self.x -= random.randint(3, 9)
+                    self.x -= random.randint(3, 5)
                 else:
                     self.x += random.randint(1, 4)
-            elif self.x < player_pos[0]:
+            elif self.x < player_pos[0] + self.currentDistanceFromPlayerX:
                 if self.currentDirection <= 1:
-                    self.x += random.randint(3, 9)
+                    self.x += random.randint(3, 5)
                 else:
                     self.x -= random.randint(1, 4)
 
-            self.y -= random.randint(0, 6)
+
+
+
+
+
+
+            if self.y > player_pos[0] + self.currentDistanceFromPlayerY:
+                if self.currentDirection <= 1:
+                    self.y -= random.randint(3, 5)
+                else:
+                    self.y += random.randint(1, 4)
+            elif self.y < player_pos[0] + self.currentDistanceFromPlayerY:
+                if self.currentDirection <= 1:
+                    self.y += random.randint(3, 5)
+                else:
+                    self.y -= random.randint(1, 4)
+
+
     def every_frame_event(self):
         if self.directionRefreshCounter == 120:
             self.currentDirection = random.randint(0, 2)
+
             self.directionRefreshCounter = 0
+            self.currentDistanceFromPlayerY = random.randint(-150, 150)
+            self.currentDistanceFromPlayerX = random.randint(-200, 200)
         else:
             self.directionRefreshCounter += 1
         if self.knock == True:
@@ -296,12 +320,7 @@ class SlowTank(Enemy):
             self.x += random.randint(3, 9)
 
 
-        if self.currentDirection == 0:
-                self.y += random.randint(2, 6)
-        elif self.currentDirection == 1:
-                self.y += random.randint(1, 3)
-        elif self.currentDirection == 2:
-                self.y -= random.randint(1, 3)
+        
     def get_destroyed(self, player_pos):
         self.living = False
         self.gamehandler.remove(self)
@@ -469,7 +488,7 @@ def episode1():
     pygame.mixer.init(frequency=44100)
         
     modeEpi1Event = GameHandler()
-    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_l], "delta1.GIF", modeEpi1Event, 6, 150, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 20, 8, 14, 50, 12, 60, False, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav", "damaged.wav", 4000, 1)
+    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_l], "delta1.GIF", modeEpi1Event, 6, 150, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 20, 9, 30, 50, 12, 180, False, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav", "damaged.wav", 4000, 1)
     playerHPBar = HPBar("ship-hp-bar.PNG", playerShip.get_hp(), 500, 770, 100, [50, 255, 100], 50, 70)
     epi1Music = Sound("Episode1Music.ogg", grb.musicchannel)
     epi1Music.multiplay(-1)
