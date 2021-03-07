@@ -142,21 +142,21 @@ class SmallLongShooter(Enemy):
     def normal_AI(self, player_pos):
         if self.dirMode >= 0 and self.dirMode <= 24:
             if self.x > player_pos[0]:
-                self.x -= random.randint(5, 17)
+                self.x -= CalPixelSpeed(random.randint(5, 17))
                 print("x>")
             elif self.x < player_pos[0]:
                 print("x<no")
-                self.x += random.randint(5, 17)
+                self.x += CalPixelSpeed(random.randint(5, 17))
 
 
 
 
 
             if self.y < player_pos[1] - 500:
-                self.y += random.randint(0, 12)
+                self.y += CalPixelSpeed(random.randint(0, 12))
                 print("ranged")
             elif self.y >= player_pos[1] - 500:
-                self.y -= random.randint(0, 8)
+                self.y -= CalPixelSpeed(random.randint(0, 8))
                 print("unranged")
 
             self.dirMode += 1
@@ -186,22 +186,22 @@ class SmallLongShooter(Enemy):
         self.hitbox = pygame.Rect(self.x, self.y, self.sx, self.sy)
         self.bulletlist = self.gun.get_bullets()
         if self.amtKnock < 11 and self.amtKnock > 0 and self.knock == 0:
-            self.y -= 24
-            self.x += 24
+            self.y -= CalPixelSpeed(24)
+            self.x += CalPixelSpeed(24)
             print("kn")
             self.amtKnock += 1
         elif self.amtKnock < 11 and self.knock == 1:
-            self.y += 24
-            self.x += 24
+            self.y += CalPixelSpeed(24)
+            self.x += CalPixelSpeed(24)
             print("kn")
             self.amtKnock += 1
         elif self.amtKnock < 11 and self.knock == 2:
-            self.y -= 24
-            self.x -= 24
+            self.y -= CalPixelSpeed(24)
+            self.x -= CalPixelSpeed(24)
             self.amtKnock += 1
         elif self.amtKnock < 11 and self.knock == 3:
-            self.y += 24
-            self.x -= 24
+            self.y += CalPixelSpeed(24)
+            self.x -= CalPixelSpeed(24)
             self.amtKnock += 1
         elif self.amtKnock >= 11:
             self.knock = False
@@ -214,11 +214,11 @@ class SmallLongShooter(Enemy):
     def bullet_incoming(self, bx, by):
         print("beee")
         if self.x > bx:
-            self.x -= random.randint(1, 15)
+            self.x -= CalPixelSpeed(random.randint(1, 15))
         elif self.x < bx:
-            self.x += random.randint(1, 15) 
+            self.x += CalPixelSpeed(random.randint(1, 15))
         else:
-            self.x += random.randint(-13, 15)
+            self.x += CalPixelSpeed(random.randint(-13, 15))
 
 
 class SlowTank(Enemy):
@@ -239,17 +239,17 @@ class SlowTank(Enemy):
         self.currentDistanceFromPlayerX = random.randint(-200, 200)
     def normal_AI(self, player_pos):
 
-
+        if not self.knock:
             if self.x > player_pos[0] + self.currentDistanceFromPlayerX:
                 if self.currentDirection <= 1:
-                    self.x -= random.randint(3, 5)
+                    self.x -= CalPixelSpeed(random.randint(3, 5))
                 else:
-                    self.x += random.randint(1, 4)
+                    self.x += CalPixelSpeed(random.randint(1, 4))
             elif self.x < player_pos[0] + self.currentDistanceFromPlayerX:
                 if self.currentDirection <= 1:
-                    self.x += random.randint(3, 5)
+                    self.x += CalPixelSpeed(random.randint(3, 5))
                 else:
-                    self.x -= random.randint(1, 4)
+                    self.x -= CalPixelSpeed(random.randint(1, 4))
 
 
 
@@ -259,14 +259,14 @@ class SlowTank(Enemy):
 
             if self.y > player_pos[0] + self.currentDistanceFromPlayerY:
                 if self.currentDirection <= 1:
-                    self.y -= random.randint(3, 5)
+                    self.y -= CalPixelSpeed(random.randint(3, 5))
                 else:
-                    self.y += random.randint(1, 4)
+                    self.y += CalPixelSpeed(random.randint(1, 4))
             elif self.y < player_pos[0] + self.currentDistanceFromPlayerY:
                 if self.currentDirection <= 1:
-                    self.y += random.randint(3, 5)
+                    self.y += CalPixelSpeed(random.randint(3, 5))
                 else:
-                    self.y -= random.randint(1, 4)
+                    self.y -= CalPixelSpeed(random.randint(1, 4))
 
 
     def every_frame_event(self):
@@ -281,11 +281,11 @@ class SlowTank(Enemy):
         if self.knock == True:
             self.amtKnock += 1
             if self.knockType == 0:
-                self.x += 10
-                self.y += 10
+                self.x += CalPixelSpeed(10)
+                self.y -= CalPixelSpeed(10)
             elif self.knockType == 1:
-                self.x -= 10
-                self.y += 10
+                self.x -= CalPixelSpeed(10)
+                self.y -= CalPixelSpeed(10)
             if self.amtKnock == 45:
                 self.knock = False
                 self.amtKnock = 15
@@ -310,14 +310,14 @@ class SlowTank(Enemy):
         self.knockType = random.randint(0, 1)
     def bullet_incoming(self, bx, by):
         if self.x > bx:
-            self.x -= random.randint(3,9)
+            self.x -= CalPixelSpeed(random.randint(3,9))
         elif self.x <= bx:
-            self.x += random.randint(3, 9)
+            self.x += CalPixelSpeed(random.randint(3, 9))
     def player_movement(self, player_pos):
         if self.x > player_pos[0]:
-            self.x -= random.randint(3, 9)
+            self.x -= CalPixelSpeed(random.randint(3, 9))
         elif self.x < player_pos[0]:
-            self.x += random.randint(3, 9)
+            self.x += CalPixelSpeed(random.randint(3, 9))
 
 
         
@@ -518,7 +518,7 @@ def episode1():
 
         pygame.display.flip()
 
-        grb.gameClock.tick(60)
+        grb.gameClock.tick(90)
 
         if grb.gamemode == "gameover":
             pygame.mixer.quit()
