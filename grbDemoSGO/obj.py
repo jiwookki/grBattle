@@ -344,7 +344,8 @@ class Ship(GameObject):
             self.movedThisFrame = True
         if event.key == self.keyshoot:
             if self.auto == True:
-                self.gun.autoshooting()
+                print(self.gun)
+                self.gun.auto_shoot()
             else:
                 if self.gun.get_ammo_left() > 0 and self.gun.get_cooldown() == False:
                     self.shoot()
@@ -358,7 +359,7 @@ class Ship(GameObject):
         if event.key == self.keyleft or event.key == self.keyright:
             self.dx = 0
         if event.key == self.keyshoot and self.auto == True:
-            self.gun.autoshooting()
+            self.gun.auto_shoot()
 
     def every_frame_event(self):
         self.movedThisFrame = False
@@ -526,8 +527,8 @@ class Gun():
     def get_cooldown(self):
         return self.coolbool
 
-    def autoshooting(self):
-        if self.autoshooting:
+    def auto_shoot(self):
+        if self.autoshooting == True:
             self.autoshooting = False
         else:
             self.autoshooting = True

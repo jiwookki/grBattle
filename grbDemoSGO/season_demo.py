@@ -488,7 +488,7 @@ def episode1():
     pygame.mixer.init(frequency=44100)
         
     modeEpi1Event = GameHandler()
-    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_l], "delta1.GIF", modeEpi1Event, 6, 150, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 20, 9, 30, 50, 12, 180, False, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav", "damaged.wav", 4000, 1)
+    playerShip = Ship([pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_l], "delta1.GIF", modeEpi1Event, 6, 150, 600, 80, 80, "up", "blastershot.PNG", [600, 100, 24, 32], 20, 9, 30, 50, 12, 180, True, "BlasterShoot.wav", "GunReload.wav", "BulletIn.wav", "damaged.wav", 4000, 1)
     playerHPBar = HPBar("ship-hp-bar.PNG", playerShip.get_hp(), 500, 770, 100, [50, 255, 100], 50, 70)
     epi1Music = Sound("Episode1Music.ogg", grb.musicchannel)
     epi1Music.multiplay(-1)
