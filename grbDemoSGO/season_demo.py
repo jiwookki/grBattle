@@ -333,7 +333,15 @@ class SlowTank(Enemy):
             
 
 
-
+class AsteroidLauncher(Enemy):
+    def __init__(self, sprite, x, y, projsprite, sx, sy, gamehandler):
+        super().init(sprite, x, y, sx, sy, gamehandler)
+        self.hELTH = 325
+        self.damage = 45
+        self.directionRefreshCounter = 0
+        self.currentDirection = 0
+        self.gunFiring = False
+        self.
 
 
 
