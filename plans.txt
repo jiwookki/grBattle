@@ -31,12 +31,18 @@ Tinyfast Enemy: 35HP, 14-32 ppf, melee attack, dmg = 35
 SmallDistancedShooter: 50HP, 8-20ppf, long-range attack,  doesn't go near player, similar x pos but far away y pos, dmg = 60
 SlowTank: 250HP, 5-15 ppc, 5-shot bullets, very slow, goes toward player, large, extra damage when bump into player and explosion
 AsteroidLauncher: 60HP, 7-18ppf, asteroid launch, launches slow-moving asteroids, dmg = 80
+BattleShip - 80hp, 6-21ppc, 3 guns, one directly forward, one 45 degrees, one -45 degreees. Gun shoots at a rate of approximately 1shot per 12 frames.
 
 
 
 
 
 Story
+
+
+UPDATE: SINCE 21/6/2021, THE GAME WILL BE AN ARCADE STYLE GAME WITH NO STORY.
+
+
 
 Character
     Profile
