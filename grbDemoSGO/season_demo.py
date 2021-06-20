@@ -334,14 +334,32 @@ class SlowTank(Enemy):
 
 
 class AsteroidLauncher(Enemy):
-    def __init__(self, sprite, x, y, projsprite, sx, sy, gamehandler):
+    def __init__(self, sprite, x, y, projsprite, sx, sy, gamehandler, pos_range):
         super().init(sprite, x, y, sx, sy, gamehandler)
         self.hELTH = 325
         self.damage = 45
         self.directionRefreshCounter = 0
         self.currentDirection = 0
         self.gunFiring = False
-        self.
+        self.gunFiringCounter = 0
+        self.gunFiringCooldown = 0
+        self.gun = Gun(projsprite, [self.x, self.y, self.sx, self.sy], "down", 1, 360, self, [self.x, self.y], 1200, 1, 300, True, None, None, None, self.damage, 1)
+        self.knock = False
+        self.amtKnock = 0
+        self.knockType = 0
+        self.pos_range = pos_range
+        # pos_range is 2 x positions that the asteriod launcher will always keep within
+        self.x_pos = random.randint(150, 680)
+    def normal_AI(self, player_pos):
+        if self.directionRefreshCounter <= 180 and directionRefreshCounter > 240:
+            self.directionRefreshCounter += 1
+            self.currentDirection = 69
+
+        else:
+           pass 
+                
+
+        
 
 
 
@@ -526,7 +544,7 @@ def episode1():
 
         pygame.display.flip()
 
-        grb.gameClock.tick(90)
+        grb.gameClock.tick(60)
 
         if grb.gamemode == "gameover":
             pygame.mixer.quit()

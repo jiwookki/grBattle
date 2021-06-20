@@ -658,8 +658,6 @@ class HPBar():
         
 
 
-
-
 def showInfoBoard(list_of_things_to_blit, x, y):
     global infoOn, medfont
     def closeBoard():
@@ -689,27 +687,4 @@ def OpenMenu():
     menumusic.multiplay(-1)
     grb.gamemode = 3
     #print("grb.gamemode is 3")
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
 #print("objects")
-
