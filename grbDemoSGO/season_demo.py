@@ -161,11 +161,17 @@ class SmallLongShooter(Enemy):
                 #print("unranged")
 
             self.dirMode += 1
-        elif self.dirmode >= 25 and self.dirMode <= 75:
-            if self.dirmode == 25:
+        elif self.dirMode >= 25 and self.dirMode <= 75:
+            if self.dirMode == 25:
                 self.crntDirection = random.randint(-13, 13)
 
-            elif self.dirmode >= 26 and self.dirMode <= 50:
+            elif self.dirMode >= 26 and self.dirMode <= 50:
+                self.x += self.crntDirection
+            elif self.dirMode == 51:
+                self.crntDirection = random.randint(-13, 13)
+            elif self.dirMode >= 52 and self.dirMode <= 75:
+                self.x += self.crntDirection
+
 
 
 
