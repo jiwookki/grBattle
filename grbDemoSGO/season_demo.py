@@ -58,10 +58,10 @@ class TinyFastEnemy(Enemy):
     def __init__(self, sprite, x, y, projsprite, sx, sy, gamehandler):
         super().__init__(sprite, x, y, sx, sy, gamehandler)
         self.hELTH = 35
-        print(self.x)
-        print(self.y)
-        print(self.sx)
-        print(self.sy)
+        #print(self.x)
+        #print(self.y)
+        #print(self.sx)
+        #print(self.sy)
         self.directionRefreshCounter = 0
         self.currentDirection = random.randint(0, 3)
         self.damage = 35
@@ -107,11 +107,11 @@ class TinyFastEnemy(Enemy):
     def player_movement(self, new_pos):
         self.normal_AI(new_pos)
     def take_damage(self, knockbackVar, amountOfDamage):
-        print("boom")
+        #print("boom")
         self.hELTH -= amountOfDamage
         self.y -= CalPixelSpeed(knockbackVar)
     def get_destroyed(self, player_coor):
-        print("destroyed")
+        #print("destroyed")
         if self.living == False:
             self.living = False
         self.gamehandler.remove(self)
@@ -138,28 +138,46 @@ class SmallLongShooter(Enemy):
         self.gamehandler.add_custom_user(self)
         self.gun = Gun("smallLongBullet.png", [self.x, self.y, projbox[0], projbox[1]], "down", 8, 4, self, [self.x, self.y], 20, 10, 0, False, None, None, None, 60, 1)
         self.dirMode = 0
+        self.crntDirection = 0
 
     def normal_AI(self, player_pos):
         if self.dirMode >= 0 and self.dirMode <= 24:
             if self.x > player_pos[0]:
                 self.x -= CalPixelSpeed(random.randint(5, 17))
-                print("x>")
+                #print("x>")
             elif self.x < player_pos[0]:
-                print("x<no")
+                #print("x<no")
                 self.x += CalPixelSpeed(random.randint(5, 17))
 
 
 
 
 
-            if self.y < player_pos[1] - 500:
-                self.y += CalPixelSpeed(random.randint(0, 12))
-                print("ranged")
-            elif self.y >= player_pos[1] - 500:
-                self.y -= CalPixelSpeed(random.randint(0, 8))
-                print("unranged")
+            if self.y > player_pos[1] - 300:
+                self.y -= CalPixelSpeed(random.randint(0, 12))
+                #print("ranged")
+            elif self.y <= player_pos[1] - 400:
+                self.y += CalPixelSpeed(random.randint(0, 8))
+                #print("unranged")
 
             self.dirMode += 1
+        elif self.dirmode >= 25 and self.dirMode <= 75:
+            if self.dirmode == 25:
+                self.crntDirection = random.randint(-13, 13)
+
+            elif self.dirmode >= 26 and self.dirMode <= 50:
+
+
+
+
+
+
+            if self.y > player_pos[1] - 450:
+                self.y -= CalPixelSpeed(random.randint(0, 12))
+                #print("ranged")
+            elif self.y <= player_pos[1] - 550:
+                self.y += CalPixelSpeed(random.randint(0, 8))
+                #print("unranged")
         else:
             self.dirMode = 0
 
@@ -169,7 +187,7 @@ class SmallLongShooter(Enemy):
         self.hELTH -= damage
         self.knock = True
     def get_destroyed(self, player_coor):
-        print("destroyed")
+        #print("destroyed")
         if self.living == False:
             self.living = False
         self.gamehandler.remove(self)
@@ -177,7 +195,7 @@ class SmallLongShooter(Enemy):
         self.knock = random.randint(0, 3)
         self.hELTH -= 6.25
         self.y -= 64
-        print(self.hELTH)
+        #print(self.hELTH)
     def every_frame_event(self):
         if random.randint(0, 25) == 13:
             self.gun.shoot()             
@@ -188,12 +206,12 @@ class SmallLongShooter(Enemy):
         if self.amtKnock < 11 and self.amtKnock > 0 and self.knock == 0:
             self.y -= CalPixelSpeed(24)
             self.x += CalPixelSpeed(24)
-            print("kn")
+            #print("kn")
             self.amtKnock += 1
         elif self.amtKnock < 11 and self.knock == 1:
             self.y += CalPixelSpeed(24)
             self.x += CalPixelSpeed(24)
-            print("kn")
+            #print("kn")
             self.amtKnock += 1
         elif self.amtKnock < 11 and self.knock == 2:
             self.y -= CalPixelSpeed(24)
@@ -212,7 +230,7 @@ class SmallLongShooter(Enemy):
             self.x = checkInBoundsX(self.x)
 
     def bullet_incoming(self, bx, by):
-        print("beee")
+        #print("beee")
         if self.x > bx:
             self.x -= CalPixelSpeed(random.randint(1, 15))
         elif self.x < bx:
@@ -257,12 +275,12 @@ class SlowTank(Enemy):
 
 
 
-            if self.y > player_pos[0] + self.currentDistanceFromPlayerY:
+            if self.y > player_pos[1] + self.currentDistanceFromPlayerY:
                 if self.currentDirection <= 1:
                     self.y -= CalPixelSpeed(random.randint(3, 5))
                 else:
                     self.y += CalPixelSpeed(random.randint(1, 4))
-            elif self.y < player_pos[0] + self.currentDistanceFromPlayerY:
+            elif self.y < player_pos[1] + self.currentDistanceFromPlayerY:
                 if self.currentDirection <= 1:
                     self.y += CalPixelSpeed(random.randint(3, 5))
                 else:
@@ -382,7 +400,7 @@ def showFPSCount():
     global fpscounter
     if grb.fpscounter:
         fpsShower = Text("Avg. FPS: " + str(int(grb.gameClock.get_fps())), grb.bigfont, [255, 255, 255], 1050, 20)
-        print("fps on")
+        #print("fps on")
 
 
 
@@ -397,11 +415,11 @@ def showFPSCount():
 def delayCutsceneFrame():
     global fastCutscene
     fastCutscene = True
-    print("ARMAGEDDON")
+    #print("ARMAGEDDON")
 def cutscene1():
     global fastCutscene
     fastCutscene = False
-    print("epepepepepepepepepepisode1")
+    #print("epepepepepepepepepepisode1")
     global gamemode
     modeCut1Event = EventHandler()
     grb.screen.fill((20, 20, 20))
@@ -413,33 +431,33 @@ def cutscene1():
     cutsceneTextList = []
     cutscene1Text = []
     for EachLine in cutsceneRawText.split("\n"):
-        print("append cutscene text")  
+        #print("append cutscene text")  
         cutsceneTextList.append(EachLine)
     for eachVar in cutsceneTextList:
         if fastCutscene == False:
-            print("creating sprites")
+            #print("creating sprites")
             cutscene1Text.append(AnimText(eachVar, grb.bigfont, [255, 255, 255], 100, 250, 1))
     for currentcutText in cutscene1Text:
-        print(fastCutscene)
+        #print(fastCutscene)
         if fastCutscene == False:
             cutsceneWait = 0
             for current_length in range(0, currentcutText.gtLen()):
                 delayAmountMeasurder = KeyUser(pygame.K_RETURN, modeCut1Event, delayCutsceneFrame)
                 grb.screen.fill((0, 0, 0))
                 if fastCutscene == False:
-                    print("animating")
+                    #print("animating")
                     currentcutText.animate_blit()
-                    time.sleep(0.06)
+                    time.sleep(0.04)
                     modeCut1Event.key_event_use()
                     pygame.display.flip()
                 else:
                     break
-                    print("cheese")
+                    #print("cheese")
 
 
         if fastCutscene == False:
             if fastCutscene == False:
-                for wait in range(0, 35):
+                for wait in range(0, 28):
                     grb.gameClock.tick_busy_loop(10)
                     cutsceneWait += 1
                     modeCut1Event.key_event_use()
@@ -484,20 +502,20 @@ def spawnEnemyRoutines():
     elif waveMode == 2:
         if bool(modeEpi1Event.get_custom_objects()) == False:
             waveMode = 3
-            print("wavemode3")
+            #print("wavemode3")
     elif waveMode == 3:
         for x in range(0, 2):
-            newEnemy = SmallLongShooter("smalllongshoot.png", random.randint(0, 300), 620, "smallLongBullet.png", 66, 72, modeEpi1Event, [32, 32])
+            newEnemy = SmallLongShooter("smalllongshoot.png", random.randint(0, 300), random.randint(20, 200), "smallLongBullet.png", 66, 72, modeEpi1Event, [32, 32])
         for x in range(0, 3):
             newEnemy = TinyFastEnemy("tinyfast-ep1.png", random.randint(310, 620), 60, None, 64, 64, modeEpi1Event)
         waveMode = 4
     elif waveMode == 4:
        if bool(modeEpi1Event.get_custom_objects()) == False:
             waveMode = 5
-            print("wavemode5")
+            #print("wavemode5")
     elif waveMode == 5:
         for x in range(0, 2):
-            newEnemy = SlowTank("slowtank-ep1.png", random.randint(310, 600), 60, "smallLongBullet.png", 96, 96, modeEpi1Event)
+            newEnemy = SlowTank("slowtank-ep1.png", random.randint(310, 600), 600, "smallLongBullet.png", 96, 96, modeEpi1Event)
         waveMode = 6
     elif waveMode == 6:
         if bool(modeEpi1Event.get_custom_objects()) == False:
